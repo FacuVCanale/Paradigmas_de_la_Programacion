@@ -1,1 +1,2 @@
-# Paradigmas_de_la_Programacion
+## Paradigmas de la programación ∑
+# Facundo Viñas Canale - Juan Francisco Lebrero
