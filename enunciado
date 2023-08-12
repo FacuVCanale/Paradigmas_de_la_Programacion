@@ -8,8 +8,22 @@ capacidad por cada enlace recorrido.
 
 Para sostener este modelo se cuenta con las siguientes entidades:
 
------------------
+module Point ( Point, newP, difP)
+   where
 
+data Point = Poi Int Int deriving (Eq, Show)
+
+newP :: Int -> Int -> Point
+difP :: Point -> Point -> Float  -- distancia absoluta
+-----------------
+module City ( City, newC, nameC, distanceC )
+   where
+
+data City = Cit String Point deriving (Eq, Show)
+
+newC :: String -> Point -> City
+nameC :: City -> String
+distanceC :: City -> City -> Float
 -----------------
 module Quality ( Quality, newQ, capacityQ, delayQ )
    where

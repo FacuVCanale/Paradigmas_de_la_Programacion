@@ -1,4 +1,5 @@
 import Point
 
 
-origin = Poi 0 0
+
+origin = newP 0 0
