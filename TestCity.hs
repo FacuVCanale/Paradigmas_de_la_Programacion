@@ -1,19 +1,19 @@
+module TestCity 
+    where
+
 import City
 import Point
 
-mercedesP = newP (-34653175) (-59429675)
+import TestPoint
 
 mercedes = newC "Mercedes" mercedesP
 
 mercedes2 = newC "Mercedes" mercedesP
 
-zarateP = newP (-34096012) (-59024116)
-
 zarate = newC "Zárate" zarateP
 
-victoriaP = newP (-34446312) (-58530667)
-
 victoria = newC "Victoria" victoriaP
+
 
 distanceMV = distanceC mercedes victoria
 

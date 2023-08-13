@@ -1,3 +1,5 @@
+module TestQuality
+    where
 import Quality
 
 -- delay = ms

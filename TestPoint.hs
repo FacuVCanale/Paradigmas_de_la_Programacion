@@ -1,3 +1,6 @@
+module TestPoint 
+    where
+
 import Point
 
 origin = newP 0 0
@@ -9,6 +12,13 @@ pointA = newP 2 1
 pointB = newP (-1) (-8)
 
 pointC = newP (-1) (-2)
+
+
+mercedesP = newP (-34653175) (-59429675)
+
+zarateP = newP (-34096012) (-59024116)
+
+victoriaP = newP (-34446312) (-58530667)
 
 equalP :: Point -> Point -> Bool
 equalP p1 p2 = p1 == p2
