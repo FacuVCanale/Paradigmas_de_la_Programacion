@@ -2,7 +2,7 @@
 {-# HLINT ignore "Eta reduce" #-}
 {-# HLINT ignore "Redundant ==" #-}
 
-module Region (Region(Reg), newR, foundR, linkR, tunelR, pathR, linksForR, connectedR, linkedR, delayR, availableCapacityForR, usedCapacityForR )
+module Region (Region, newR, foundR, linkR, tunelR, pathR, linksForR, connectedR, linkedR, delayR, availableCapacityForR, usedCapacityForR )
    where
 
 import City

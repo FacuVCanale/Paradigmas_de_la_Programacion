@@ -4,7 +4,7 @@
 {-# HLINT ignore "Redundant bracket" #-}
 
 
-module Tunel (Tunel(Tun), newT, connectsT, usesT, delayT )
+module Tunel (Tunel, newT, connectsT, usesT, delayT )
    where
 
 
@@ -22,7 +22,7 @@ connectsT city1 city2 (Tun []) = False
 connectsT city1 city2 (Tun (l:ls)) = linksL city1 city2 l || connectsT city1 city2 (Tun ls)
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
-usesT (Lin city1 city2 quality) (Tun links) = (Lin city1 city2 quality) `elem` links || (Lin city2 city1 quality) `elem` links 
+usesT link (Tun links) = link `elem` links || (inverseCityL link) `elem` links 
 
 delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
 delayT (Tun []) = 0
