@@ -17,7 +17,7 @@ newR :: Region
 newR cities links tunels = Reg cities links tunels
 
 foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
-foundR (Reg cities links tunels) city | city `elem` cities = Reg cities links tunels
+foundR (R) city | city `elem` cities = Reg cities links tunels
                                       | otherwise = Reg (city:cities) links tunels
 
 

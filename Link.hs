@@ -9,8 +9,12 @@ import Quality
 
 data Link = Lin City City Quality deriving (Eq, Show)
 
+checkCityOrder :: City -> City -> Bool
+checkNameCityOrder city1 city2 = if nameC city1 <= nameC city2 then True else False
+
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas
-newL city1 city2 quality = Lin city1 city2 quality
+newL city1 city2 quality | checkNameCityOrder city1 city2 == False = error "Links' cities must follow alphabetical order."
+                         | otherwise = Lin city1 city2 quality
 
 connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este link
 connectsL cityA (Lin city1 city2 _) = cityA == city1 || cityA == city2
@@ -23,7 +27,3 @@ capacityL (Lin _ _ quality) = capacityQ quality
 
 delayL :: Link -> Float     -- la demora que sufre una conexion en este canal
 delayL (Lin _ _ quality) = delayQ quality
-
-
-inverseCityL :: Link -> Link
-inverseCityL (Lin city1 city2 quality) = Lin city2 city1 quality
