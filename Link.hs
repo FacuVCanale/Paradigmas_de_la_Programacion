@@ -9,7 +9,7 @@ import Quality
 
 data Link = Lin City City Quality deriving (Eq, Show)
 
-checkCityOrder :: City -> City -> Bool
+checkNameCityOrder :: City -> City -> Bool
 checkNameCityOrder city1 city2 = if nameC city1 <= nameC city2 then True else False
 
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas
@@ -20,7 +20,8 @@ connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este li
 connectsL cityA (Lin city1 city2 _) = cityA == city1 || cityA == city2
 
 linksL :: City -> City -> Link -> Bool -- indica si estas dos ciudades distintas estan conectadas mediante este link
-linksL cityA cityB link = connectsL cityA link && connectsL cityB link
+linksL cityA cityB link | cityA == cityB = error "Both cities are the same."
+                        | otherwise = connectsL cityA link && connectsL cityB link
 
 capacityL :: Link -> Int
 capacityL (Lin _ _ quality) = capacityQ quality

@@ -16,3 +16,6 @@ nameC (Cit name _) = name
 
 distanceC :: City -> City -> Float
 distanceC city1 city2 = difP (getLocationC city1) (getLocationC city2)
+
+getLocationC :: City -> Point
+getLocationC (Cit _ location) = location
