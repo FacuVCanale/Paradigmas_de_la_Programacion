@@ -16,8 +16,8 @@ checkCorrectFormatCity :: Region -> City -> City -> Bool
 checkCorrectFormatCity (Reg cities links tunels) city1 city2  = not (city1 `notElem` cities || city2 `notElem` cities || city1 == city2)
 
 newR :: Region
--- Chequear que todos los links tengas estas cities, y que todos los tunes tengan estos links
-newR cities links tunels = Reg cities links tunels
+-- Chequear que todos los links tengas estas cities, y que todos los tunes tengan estos links PERO NO ACÁ, EMPIEZA VACÍO
+newR = Reg [] [] []
 
 foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
 foundR (Reg cities links tunels) city | city `elem` cities = Reg cities links tunels
