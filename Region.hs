@@ -9,6 +9,8 @@ import City
 import Link
 import Quality
 import Tunel
+
+
 --DESPUÉS SACAR EL DERIVING
 data Region = Reg [City] [Link] [Tunel] deriving (Eq, Show)
 
@@ -16,7 +18,6 @@ checkCorrectFormatCity :: Region -> City -> City -> Bool
 checkCorrectFormatCity (Reg cities links tunels) city1 city2  = not (city1 `notElem` cities || city2 `notElem` cities || city1 == city2)
 
 newR :: Region
--- Chequear que todos los links tengas estas cities, y que todos los tunes tengan estos links PERO NO ACÁ, EMPIEZA VACÍO
 newR = Reg [] [] []
 
 foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
@@ -32,39 +33,22 @@ linkR (Reg cities links tunels) city1 city2 quality | checkCorrectFormatCity (Re
                                                     | doesAnyConnectL city1 city2 links == True = error "A link already exists."
                                                     | otherwise = Reg cities (newL city1 city2 quality : links) tunels
 
+addLinkForT :: City -> City -> [Link] -> [Link] -> [Link]
+addLinkForT city1 city2 [] foundL = error "Necesary links does not exist."
+addLinkForT city1 city2 (l:ls) foundL = if linksL city1 city2 l == True then l : foundL else addLinkForT city1 city2 ls foundL
 
-
-
-
-availableC :: [City] -> City -> [Link] -> (City, Link)
-availableC cities city (l:ls) | null ls && possibleC == city = error "It is not possible to create this tunel."
-                              | possibleC == city = availableC cities city ls
-                              | otherwise = (possibleC, l)
-                                 where possibleC = lookForC cities l city
-
-lookForC :: [City] -> Link -> City -> City
-lookForC (c:cs) link city | null cs = if (connectsL c link && c /= city) == True then c else city
-                          | (connectsL c link && c /= city) == True = c
-                          | otherwise = lookForC cs link city
-
-finishedT :: [Link] -> City -> Bool
-finishedT links city2 = if connectsL city2 (last links) == True then True else False
-
---     merce zarat [l1,l2] [m,v,z,t] []
-createT :: City -> [Link] -> [City] -> [Link] -> City -> [Link]
-createT city1 links cities foundL finalCity  | finishedT foundL finalCity == True = foundL
-                                             | otherwise = createT (fst cityAndLink) links cities ((snd cityAndLink) : foundL) finalCity
-                                                   where cityAndLink = availableC cities city1 [l | l <- links, connectsL city1 l && l `notElem` foundL]
+createT :: Region -> [City] -> [Link] -> [Link]
+createT (Reg cities links tunels) (c1 : ( c2 : cs)) foundL | null cs == True = addLinkForT c1 c2 links foundL
+                                                           | otherwise = createT (Reg cities links tunels) (c2 : cs) (addLinkForT c1 c2 links foundL)
 
 isThereAT :: City -> City -> [Tunel] -> Bool
 isThereAT _ _ [] = False
 isThereAT city1 city2 (t:ts) = connectsT city1 city2 t || isThereAT city1 city2 ts
 
 tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
-tunelR (Reg cities links tunels) cs | length cs /= 2 || checkCorrectFormatCity (Reg cities links tunels) (head cs) (last cs) = error "Cities provided are not valid."
+tunelR (Reg cities links tunels) cs | checkCorrectFormatCity (Reg cities links tunels) (head cs) (last cs) || length cs > length links + 1 = error "Cities provided are not valid."
                                     | isThereAT (head cs) (last cs) tunels == True = error "This tunel already exists."
-                                    | otherwise = (Reg cities links (newT (createT (head cs) links cities [] (last cs)) : tunels))
--- el check possible hagamoslo adentro de createT
+                                    | otherwise = Reg cities links (newT (createT (Reg cities links tunels) cs []) : tunels)
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
 connectedR (Reg cities links (t:ts)) city1 city2 | checkCorrectFormatCity (Reg cities links (t:ts)) city1 city2 == False = error "Cities provided are not valid."
