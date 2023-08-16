@@ -10,24 +10,22 @@ import TestCity
 
 
 sameT :: Tunel -> Tunel -> Bool
-sameT (Tun links1) (Tun links2) = length links1 == length links2 && g links1 links2
-    where g (l:ls) l2 | null ls == True = l `elem` l2
-                      | otherwise = l `elem` l2 && g ls l2
+sameT t1 t2 = t1 == t2
 
 
 --Tun [Link] deriving (Eq, Show)
 
-tun1 = Tun [linkMV, linkMZ, linkZM]
+tun1 = newT [linkMV, linkMZ, linkZM]
 
-tun1Copy = Tun [linkMV, linkMZ, linkZM]
+tun1Copy = newT [linkMV, linkMZ, linkZM]
 
-tun1Inversed = Tun [linkZM, linkMZ, linkMV]
+tun1Inversed = newT [linkZM, linkMZ, linkMV]
 
-tun2 = Tun [linkMZ, linkZM]
+tun2 = newT [linkMZ, linkZM]
 
-tun3 = Tun [linkMV, linkMZ]
+tun3 = newT [linkMV, linkMZ]
 
-tun4 = Tun []
+tun4 = newT []
 
 sameTTest1 = sameT tun1 tun1Copy
 

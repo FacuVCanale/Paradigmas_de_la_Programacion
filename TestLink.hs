@@ -18,13 +18,8 @@ linkZM = newL zarate mercedes badQ
 
 linkMV = newL victoria mercedes highQ
 
-
 sameL :: Link -> Link -> Bool
-sameL (Lin city1 city2 quality1) (Lin city3 city4 quality2) = quality1 == quality2 && (city1 == city3 && city2 == city4|| city1 == city4 && city2 == city3)
-
-sameLtest1 = sameL linkZM linkMZ
-
-sameLtest2 = sameL linkMV linkMZ
+sameL l1 l2 = l1 == l2
 
 connectsLtest1 = [connectsL mercedes linkMZ, connectsL mercedes linkZM, connectsL zarate linkMZ, connectsL zarate linkZM]
 

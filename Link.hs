@@ -14,13 +14,14 @@ checkNameCityOrder city1 city2 = if nameC city1 <= nameC city2 then True else Fa
 
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas
 newL city1 city2 quality | checkNameCityOrder city1 city2 == False = error "Links' cities must follow alphabetical order."
+                         | city1 == city2 = error "You can't link a city with itself."
                          | otherwise = Lin city1 city2 quality
 
 connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este link
 connectsL cityA (Lin city1 city2 _) = cityA == city1 || cityA == city2
 
 linksL :: City -> City -> Link -> Bool -- indica si estas dos ciudades distintas estan conectadas mediante este link
-linksL cityA cityB link | cityA == cityB = error "Both cities are the same."
+linksL cityA cityB link | cityA == cityB = error "City provided is repeated."
                         | otherwise = connectsL cityA link && connectsL cityB link
 
 capacityL :: Link -> Int

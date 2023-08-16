@@ -1,14 +1,14 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Eta reduce" #-}
-
-
 module Quality (Quality, newQ, capacityQ, delayQ )
    where
 
 data Quality = Qua String Int Float deriving (Eq, Show) 
 
+checkDataQ :: String -> Int -> Float -> Bool
+checkDataQ name capacity delay = if (not (null name)) && capacity > 0 && delay >= 0 then True else False
+
 newQ :: String -> Int -> Float -> Quality
-newQ name capacity delay = Qua name capacity delay
+newQ name capacity delay | checkDataQ name capacity delay == False = error "It is not possible to create this quality."
+                         | otherwise = Qua name capacity delay
 
 capacityQ :: Quality -> Int -- cuantos túneles puede tolerar esta conexión
 capacityQ (Qua _ capacity _) = capacity
