@@ -24,8 +24,7 @@ bsaslink1 = linkR bsas1 mercedes zarate badQ
 bsaslink2 = linkR bsaslink1 mercedes victoria highQ
 
 
-bsastunel = tunelR bsaslink2 [zarate, victoria]
+bsastunel = tunelR bsaslink2 [zarate, mercedes, victoria]
 
 
 test = tunelR bsaslink1 [zarate, mercedes] -- ANDAAAAAAA
-

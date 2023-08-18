@@ -33,15 +33,15 @@ linkR (Reg cities links tunels) city1 city2 quality | checkCorrectFormatCity (Re
                                                     | doesAnyConnectL city1 city2 links == True = error "A link already exists."
                                                     | otherwise = Reg cities (newL city1 city2 quality : links) tunels
 
+
 addLinkForT :: City -> City -> [Link] -> [Link] -> [Link]
 addLinkForT city1 city2 [] foundL = error "Necesary links does not exist."
 addLinkForT city1 city2 (l:ls) foundL = if linksL city1 city2 l == True then l : foundL else addLinkForT city1 city2 ls foundL
 
+
 createT :: Region -> [City] -> [Link] -> [Link]
 createT (Reg cities links tunels) (c1 : ( c2 : cs)) foundL | null cs == True = addLinkForT c1 c2 links foundL
                                                            | otherwise = createT (Reg cities links tunels) (c2 : cs) (addLinkForT c1 c2 links foundL)
-
-
 
 isThereAT :: City -> City -> [Tunel] -> Bool
 isThereAT _ _ [] = False
@@ -54,10 +54,10 @@ availibleCapacityL links
    | foldr (\link acc -> capacityL link > 0 && acc) True links = True
    | otherwise = False
  -}
-
-availibleCapacityL :: Foldable t => t Link -> Bool
-availibleCapacityL links = all (\link -> capacityL link > 0) links 
-
+{- 
+availibleCapacityL :: Foldable t => t Link -> Region -> 
+availibleCapacityL links region = all (\link -> capacityL link - usesOfLinkR region link) links 
+ -}
 {- tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 tunelR region@(Reg cities links tunels) cs | availibleCapacityL links || checkCorrectFormatCity (Reg cities links tunels) (head cs) (last cs) || length cs > length links + 1 = error "Cities provided are not valid."
                                     | isThereAT (head cs) (last cs) tunels == True = error "This tunel already exists."
@@ -65,7 +65,7 @@ tunelR region@(Reg cities links tunels) cs | availibleCapacityL links || checkCo
 
 
 tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
-tunelR (Reg cities links tunels) cs | not (availibleCapacityL links) || not(checkCorrectFormatCity (Reg cities links tunels) (head cs) (last cs)) || length cs > length links + 1 = error "Cities provided are not valid."
+tunelR (Reg cities links tunels) cs -- | not (availibleCapacityL links) || not(checkCorrectFormatCity (Reg cities links tunels) (head cs) (last cs)) || length cs > length links + 1 = error "Cities provided are not valid."
                                     | isThereAT (head cs) (last cs) tunels == True = error "This tunel already exists."
                                     | otherwise = Reg cities links (newT (createT (Reg cities links tunels) cs []) : tunels)
 
