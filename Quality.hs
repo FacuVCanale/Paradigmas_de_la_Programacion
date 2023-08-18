@@ -1,5 +1,6 @@
 module Quality (Quality, newQ, capacityQ, delayQ )
    where
+import Control.Concurrent.STM (check)
 
 data Quality = Qua String Int Float deriving (Eq, Show) 
 
@@ -16,3 +17,16 @@ capacityQ (Qua _ capacity _) = capacity
 delayQ :: Quality -> Float  -- la demora por unidad de distancia que sucede en las conexiones de este canal
 delayQ (Qua _ _ delay) = delay
 
+qA = newQ "A" 10 1.0
+
+qB = newQ "B" 15 0.5
+
+tQ = [
+   checkDataQ "" 1 1 == False,
+   checkDataQ "Mercedes" 10 1.0 == True,
+   qA == Qua "A" 10 1.0,
+   capacityQ qB == 15,
+   delayQ qA == 1.0
+   ]
+
+allTestQ = and tQ

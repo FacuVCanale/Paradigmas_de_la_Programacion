@@ -10,7 +10,7 @@ import Link
 import Quality
 import Tunel
 
-data Region = Reg [City] [Link] [Tunel] deriving (Show)
+data Region = Reg [City] [Link] [Tunel] deriving (Eq, Show)
 
 checkFormatCity :: Region -> City -> City -> Bool
 checkFormatCity (Reg cities links tunels) city1 city2  = city1 `elem` cities && city2 `elem` cities && city1 /= city2
@@ -19,7 +19,7 @@ newR :: Region
 newR = Reg [] [] []
 
 foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
-foundR (Reg cities links tunels) city | city `elem` cities = error "This city is already in this region."
+foundR (Reg cities links tunels) city | city `elem` cities = error "This city is already in this region." -- Tenemos que chequear también que no tenga la misma coord o el mismo nombre, puede no ser la misma ciudad y que no deba ser válida.
                                       | otherwise = Reg (city:cities) links tunels
 
 doesAnyConnectL :: City -> City -> [Link] -> Bool
@@ -108,6 +108,5 @@ availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad di
 availableCapacityForR region city1 city2 | checkFormatCity region city1 city2 == False = error "Cities provided are not valid."
                                          | otherwise = capacityL link - usesOfLinkR region link
                                                 where link = getLinkR region city1 city2
-
 
 
