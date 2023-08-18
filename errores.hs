@@ -1,6 +1,5 @@
 import Control.Exception
 import System.IO.Unsafe
-import Text.XHtml (action)
 
 fallo :: (a -> IO b) -> a -> IO Bool
 fallo function action = do
