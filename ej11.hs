@@ -21,3 +21,40 @@ partes :: [a] -> [[a]]
 --partes = foldr (\each acc -> [each : x | x <- acc] ++ acc) [[]]
 partes = foldr (\each acc -> (++) (g each acc) acc) [[]]
     where g each acc = [each : x | x <- acc]
+
+
+
+data Stick = Vacio | Stack Stick Int deriving (Eq, Show)
+
+push :: Stick -> Int -> Stick
+push Vacio n = Stack Vacio n
+push s@(Stack stick elem) d | elem > d = Stack s d
+                            | otherwise = error "Segui participando"
+
+pop :: Stick -> Stick
+pop (Stack s _) = s
+
+top :: Stick -> Int
+top (Stack _ n) = n
+
+
+data Hanoi = Hanoi Stick Stick Stick deriving (Eq)
+
+hanoiIC :: Hanoi -> Hanoi 
+hanoiIC (Hanoi i c d) = Hanoi (pop i) (push c (top i)) d
+
+initWith :: [Int] -> [Int] -> [Int] -> Hanoi
+initWith i c d = Hanoi (stickWith i) (stickWith c) (stickWith d)
+
+stickWith :: [Int] -> Stick
+stickWith = foldr (flip push) Vacio
+
+hanoi = initWith [] [1,3] [2]
+
+t = [ push Vacio 3 == Stack Vacio 3,
+      pop (push Vacio 3) == Vacio,
+      top (push Vacio 3) == 3,
+      stickWith [2, 3] == Stack (Stack Vacio 3) 2,
+      True ]
+
+allTest = and t

@@ -12,7 +12,7 @@ import Tunel
 
 
 --DESPUÉS SACAR EL DERIVING
-data Region = Reg [City] [Link] [Tunel] deriving (Eq, Show)
+data Region = Reg [City] [Link] [Tunel] deriving (Show)
 
 checkCorrectFormatCity :: Region -> City -> City -> Bool
 checkCorrectFormatCity (Reg cities links tunels) city1 city2  =  (city1 `elem` cities && city2 `elem` cities && city1 /= city2)
