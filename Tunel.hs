@@ -1,24 +1,14 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Redundant if" #-}
 module Tunel (Tunel, newT, connectsT, usesT, delayT )
    where
 
-
-import Link
+import Point
 import City
-
--- cuando damos el ejemplo de como crear el tunel, hay que poner que se haga en orden alfababetico
+import Quality
+import Link
 
 data Tunel = Tun [Link] deriving (Eq, Show)
 
---checkRepeatedLinks :: [Link] -> Bool
---checkRepeatedLinks [] = False
---checkRepeatedLinks (l:ls) = l `elem` ls || checkRepeatedLinks ls
-
 newT :: [Link] -> Tunel
--- Chequear que el orden de la lista de links sea coherente (A->B->C). SI no se puede gg vemos q hacemos
---newT links | checkRepeatedLinks links == True = error "There are repeated links."
---           | otherwise = Tun links
 newT links = Tun links
 
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
@@ -32,3 +22,31 @@ usesT link (Tun links) = link `elem` links
 delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
 delayT (Tun []) = 0
 delayT (Tun (l:ls)) = delayL l + delayT (Tun ls)
+
+--------------------------------
+
+pA = newP 0 0
+
+pB = newP 3 4
+
+pC = newP 7 7
+
+cA = newC "A" pA
+
+cB = newC "B" pB
+
+cC = newC "C" pC
+
+qA = newQ "A" 10 1.0
+
+qB = newQ "B" 15 0.5
+
+qC = newQ "C" 5 0.25
+
+lAB = newL cA cB qA 
+
+lBC = newL cB cC qB
+
+tAC = newT [lAB,lBC]
+
+tT = newT [lAB,lBC] == Tun [lAB,lBC]

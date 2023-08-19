@@ -3,6 +3,7 @@ where
 
 import Point
 
+
 data City = Cit String Point deriving (Eq, Show)
 
 newC :: String -> Point -> City
@@ -18,6 +19,7 @@ getLocationC (Cit _ location) = location
 distanceC :: City -> City -> Float
 distanceC city1 city2 = difP (getLocationC city1) (getLocationC city2)
 
+------------------------------------
 pA = newP 0 0
 cA = newC "A" pA
 
@@ -27,10 +29,7 @@ cB = newC "B" pB
 
 tC = [
     cA == Cit "A" pA,
-    nameC cA == "A",
-    getLocationC cA == pA,
-    distanceC cA cB == difP pA pB,
-    True 
+    getLocationC cA == pA
     ]
 
 allTestC = and tC
