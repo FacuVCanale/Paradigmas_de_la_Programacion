@@ -24,7 +24,7 @@ doesAnyConnectL city1 city2 (l:ls) = linksL city1 city2 l || doesAnyConnectL cit
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR region@(Reg cities links tunels) city1 city2 quality | isValidCityFormat region city1 city2 == False = error "Cities aren't in the region"
-                                                           | doenyCsAonnectL city1 city2 links == True = error "A link already exists."
+                                                           | doesAnyConnectL city1 city2 links == True = error "A link already exists."
                                                            | otherwise = Reg cities (newL city1 city2 quality : links) tunels
 
 addLinkForT :: City -> City -> [Link] -> [Link] -> [Link]
