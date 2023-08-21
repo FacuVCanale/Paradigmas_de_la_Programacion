@@ -58,3 +58,8 @@ t = [ push Vacio 3 == Stack Vacio 3,
       True ]
 
 allTest = and t
+
+
+
+datss :: Int -> Bool -> Bool
+datss n b | n == 0 && b == False = True

@@ -1,14 +1,14 @@
 module City (City, newC, nameC, distanceC )
-where
+    where
 
 import Point
-
 
 data City = Cit String Point deriving (Eq, Show)
 
 newC :: String -> Point -> City
-newC name location | null name == True = error "A city name must be chosen."
-                   | otherwise = Cit name location
+newC name location
+  | null name == True = error "A city name must be chosen."
+  | otherwise = Cit name location
 
 nameC :: City -> String
 nameC (Cit name _) = name
@@ -28,8 +28,12 @@ cB = newC "B" pB
 
 
 tC = [
+    
     cA == Cit "A" pA,
-    getLocationC cA == pA
-    ]
+    
+    getLocationC cA == pA,
+
+    True
+        ]
 
 allTestC = and tC
