@@ -25,7 +25,7 @@ testCity = [
 
   distanceC cA cB == difP pA pB,
 
-  testF (newC "" pC),
+  testF (newC "" pC), -- Throws an error because of empty name
 
   True
     ]
@@ -39,9 +39,9 @@ testQuality = [
 
   delayQ qA == 1.0,
 
-  testF (newQ "" 3 0.1),
-  testF (newQ "G" (-3) 0.1),
-  testF (newQ "" 3 (-0.1)),
+  testF (newQ "" 3 0.1), -- Throws error because of empty name
+  testF (newQ "G" (-3) 0.1), -- Throws error because of negative capacity (invalid) and for empty name.
+  testF (newQ "" 3 (-0.1)),  -- Throws error negative delay (invalid) and for empty name.
 
   True
     ]
@@ -59,10 +59,10 @@ testLinks = [
 
   delayL lBC == 0.5 * 5,
 
-  testF (newL cB cA qA),
-  testF (newL cB cB qA),
+  testF (newL cB cA qA), -- Throws error because cities are not in the required alphabetical order. 
+  testF (newL cB cB qA), -- Throws an error because the same city cB is provided twice, which is not allowed.
 
-  testF (linksL cA cA lAB),
+  testF (linksL cA cA lAB), -- Throws an error because the linksL function requires two distinct cities, but cA is provided twice here.
 
 
 
@@ -95,25 +95,25 @@ testRegion = [
 
   availableCapacityForR rA cA cB == capacityL lAB - 1,
 
-  testF (foundR rA01 cA),
+  testF (foundR rA01 cA), -- Throws error because cA already exists in rA01.
 
-  testF (linkR rA02 cA cC qA),
+  testF (linkR rA02 cA cC qA), -- Throws error because cC does not exist in rA02.
 
-  testF (linkR rA02 cA cA qA),
+  testF (linkR rA02 cA cA qA), -- Throws error because cA is repeated.
 
-  testF (linkR rA04 cA cB qC),
+  testF (linkR rA04 cA cB qC), -- Throws error because link cA-cB already exists.
 
-  testF (tunelR rA04 [cA, cB, cC]),
+  testF (tunelR rA04 [cA, cB, cC]), -- Throws error because link cB-cC does not exist.
 
-  testF (tunelR rA04 [cA, cB, cA]),
+  testF (tunelR rA04 [cA, cB, cA]), -- Throws error because cA is repeated.
 
-  testF (tunelR rA05 [cC, cB, cA]),
+  testF (tunelR rA05 [cC, cB, cA]), -- Throws error because cities not in alphabetical order.
 
-  testF (tunelR rB09 [cA, cB, cC, cD] ),
+  testF (tunelR rB09 [cA, cB, cC, cD] ), -- Throws error because there's already a tunnel connecting those cities.
 
-  testF (delayR rA05 cA cC),
+  testF (delayR rA05 cA cC), -- Throws error because there are not tunnels connecting the cities given.
 
-  testF (availableCapacityForR rA02 cA cB),
+  testF (availableCapacityForR rA02 cA cB), -- There are no possible links in this region.
 
   True
     ]

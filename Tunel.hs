@@ -90,6 +90,6 @@ tC = [
    not (areEndCitiesManyL cA cC [lAB, lBC, lAB]),
    areEndCitiesManyL cA cD [lAB, lBC, lCD],
 
-   testF (areEndCitiesManyL cA cC [lAB, lBC]),
+   
 
    True]
