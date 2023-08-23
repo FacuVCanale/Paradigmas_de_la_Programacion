@@ -11,29 +11,29 @@ import Link
 data Tunel = Tun [Link] deriving (Eq, Show)
 
 newT :: [Link] -> Tunel
-newT links = Tun links
+newT ls = Tun ls
 
 
 correctConnectionTwoLOneSided :: City -> City -> [Link] -> Bool
-correctConnectionTwoLOneSided city1 city2 [l1, l2] = if connectsL city1 l1 && not (connectsL city1 l2) then True else False
+correctConnectionTwoLOneSided c1 c2 [l1, l2] = connectsL c1 l1 && not (connectsL c1 l2)
 
 correctConnectionTwoL :: City -> City -> [Link] -> Bool
-correctConnectionTwoL city1 city2 twoLinks = if correctConnectionTwoLOneSided city1 city2 twoLinks == True && correctConnectionTwoLOneSided city2 city1 (reverse twoLinks) == True then True else False
+correctConnectionTwoL c1 c2 twoLs = correctConnectionTwoLOneSided c1 c2 twoLs && correctConnectionTwoLOneSided c2 c1 (reverse twoLs)
 
 correctConnectionVariousLOneSided :: City -> City -> [Link] -> Bool
-correctConnectionVariousLOneSided city1 city2 (l:ls) = if connectsL city1 l && not (connectsL city1 (head ls)) && connectsL city2 (last ls) && not (connectsL city2 (last (init ls))) then True else False
+correctConnectionVariousLOneSided c1 c2 (l:ls) = connectsL c1 l && not (connectsL c1 (head ls)) && connectsL c2 (last ls) && not (connectsL c2 (last (init ls)))
 
 correctConnectionVariousL :: City -> City -> [Link] -> Bool
-correctConnectionVariousL city1 city2 links = if correctConnectionVariousLOneSided city1 city2 links == True || correctConnectionVariousLOneSided city2 city1 links == True then True else False
+correctConnectionVariousL c1 c2 ls = correctConnectionVariousLOneSided c1 c2 ls || correctConnectionVariousLOneSided c2 c1 ls
 
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
-connectsT city1 city2 (Tun links)
-  | length links == 1 = linksL city1 city2 (head links)
-  | length links == 2 = if correctConnectionTwoL city1 city2 links == True || correctConnectionTwoL city2 city1 links == True then True else False
-  | otherwise = if correctConnectionVariousL city1 city2 links == True || correctConnectionVariousL city2 city1 links == True then True else False 
+connectsT c1 c2 (Tun ls)
+  | length ls == 1 = linksL c1 c2 (head ls)
+  | length ls == 2 = correctConnectionTwoL c1 c2 ls || correctConnectionTwoL c2 c1 ls
+  | otherwise = correctConnectionVariousL c1 c2 ls || correctConnectionVariousL c2 c1 ls
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
-usesT link (Tun links) = link `elem` links
+usesT link (Tun ls) = link `elem` ls
 
 delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
 delayT (Tun []) = 0
@@ -64,7 +64,7 @@ qB = newQ "B" 15 0.5
 
 qC = newQ "C" 5 0.25
 
-lAB = newL cA cB qA 
+lAB = newL cA cB qA
 
 lBC = newL cB cC qB
 
@@ -77,13 +77,13 @@ tT = newT [lAB,lBC] == Tun [lAB,lBC]
 
 
 tC = [
-   
-   correctConnectionTwoL cA cB [lAB,lBC] ==  False, 
-   correctConnectionTwoL cA cC [lAB, lBC] == True,
-   
-   correctConnectionVariousL cA cC [lAB, lBC, lAB] == False,
-   correctConnectionVariousL cA cD [lAB, lBC, lCD] == True,
-    
-   testF (correctConnectionVariousL cA cC [lAB, lBC]) == True,
-   
+
+   not (correctConnectionTwoL cA cB [lAB,lBC]),
+   correctConnectionTwoL cA cC [lAB, lBC],
+
+   not (correctConnectionVariousL cA cC [lAB, lBC, lAB]),
+   correctConnectionVariousL cA cD [lAB, lBC, lCD],
+
+   testF (correctConnectionVariousL cA cC [lAB, lBC]),
+
    True]

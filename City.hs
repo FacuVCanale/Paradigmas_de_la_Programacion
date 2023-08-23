@@ -6,18 +6,18 @@ import Point
 data City = Cit String Point deriving (Eq, Show)
 
 newC :: String -> Point -> City
-newC name location
-  | null name == True = error "A city name must be chosen."
-  | otherwise = Cit name location
+newC name loc
+  | null name = error "A city name must be chosen."
+  | otherwise = Cit name loc
 
 nameC :: City -> String
 nameC (Cit name _) = name
 
-getLocationC :: City -> Point
-getLocationC (Cit _ location) = location
+getlocationC :: City -> Point
+getlocationC (Cit _ loc) = loc
 
 distanceC :: City -> City -> Float
-distanceC city1 city2 = difP (getLocationC city1) (getLocationC city2)
+distanceC c1 c2 = difP (getlocationC c1) (getlocationC c2)
 
 ------------------------------------
 pA = newP 0 0
@@ -28,10 +28,10 @@ cB = newC "B" pB
 
 
 tC = [
-    
+
     cA == Cit "A" pA,
-    
-    getLocationC cA == pA,
+
+    getlocationC cA == pA,
 
     True
         ]

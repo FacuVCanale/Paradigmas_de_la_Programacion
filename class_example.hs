@@ -24,7 +24,16 @@ partes = foldr (\each acc -> (++) (g each acc) acc) [[]]
 
 
 
-data Stick = Vacio | Stack Stick Int deriving (Eq, Show)
+data Stick = Vacio | Stack Stick Int deriving (Eq)
+
+instance Show Stick
+        where show s = "| " ++ printS s
+
+printS :: Stick -> [Char]
+printS Vacio = ""
+printS (Stack s d) = printS s ++ " " ++ show d
+
+
 
 push :: Stick -> Int -> Stick
 push Vacio n = Stack Vacio n
@@ -40,7 +49,7 @@ top (Stack _ n) = n
 
 data Hanoi = Hanoi Stick Stick Stick deriving (Eq)
 
-hanoiIC :: Hanoi -> Hanoi 
+hanoiIC :: Hanoi -> Hanoi
 hanoiIC (Hanoi i c d) = Hanoi (pop i) (push c (top i)) d
 
 initWith :: [Int] -> [Int] -> [Int] -> Hanoi
@@ -50,6 +59,9 @@ stickWith :: [Int] -> Stick
 stickWith = foldr (flip push) Vacio
 
 hanoi = initWith [] [1,3] [2]
+
+instance Show Hanoi
+        where show (Hanoi i c d) = " I: " ++ show i ++ "\n C: " ++ show c ++ "\n D: " ++ show d
 
 t = [ push Vacio 3 == Stack Vacio 3,
       pop (push Vacio 3) == Vacio,
@@ -62,4 +74,5 @@ allTest = and t
 
 
 datss :: Int -> Bool -> Bool
-datss n b | n == 0 && b == False = True
+datss n b | n == 0 && not b = True
+

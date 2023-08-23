@@ -16,113 +16,118 @@ newR = Reg [] [] []
 
 checkValidCity :: City -> [City] -> Bool
 checkValidCity _ [] = True
-checkValidCity city (c:cs)
-  | distanceC city c /= 0 && nameC city /= nameC c && checkValidCity city cs = True
-  | otherwise = False
+checkValidCity c1 (c2:cs) = distanceC c1 c2 /= 0 && nameC c1 /= nameC c2 && checkValidCity c1 cs
 
-foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
-foundR (Reg cities links tunels) city 
-  | city `elem` cities = error "This city is already in this region." -- Tenemos que chequear también que no tenga la misma coord o el mismo nombre, puede no ser la misma ciudad y que no deba ser válida.
-  | checkValidCity city cities == False = errorCities
-  | otherwise = Reg (city:cities) links tunels
+foundR :: Region -> City -> Region
+foundR (Reg cs ls ts) c
+  | c `elem` cs = error "This city is already in this region."
+  | not (checkValidCity c cs) = errorCities
+  | otherwise = Reg (c:cs) ls ts
 
 
 doesAnyConnectL :: City -> City -> [Link] -> Bool
 doesAnyConnectL _ _ [] = False
-doesAnyConnectL city1 city2 (l:ls) = linksL city1 city2 l || doesAnyConnectL city1 city2 ls
+doesAnyConnectL c1 c2 (l:ls) = linksL c1 c2 l || doesAnyConnectL c1 c2 ls
 
 areValidCities :: Region -> City -> City -> Bool
-areValidCities (Reg cities links tunels) city1 city2  = city1 `elem` cities && city2 `elem` cities && city1 /= city2
+areValidCities (Reg cs ls ts) c1 c2  = c1 `elem` cs && c2 `elem` cs && c1 /= c2
 
-linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
-linkR region@(Reg cities links tunels) city1 city2 quality 
-  | areValidCities region city1 city2 == False = errorCities
-  | doesAnyConnectL city1 city2 links == True = error "A link already exists."
-  | otherwise = Reg cities (newL city1 city2 quality : links) tunels
+linkR :: Region -> City -> City -> Quality -> Region
+linkR r@(Reg cs ls ts) c1 c2 q
+  | not (areValidCities r c1 c2) = errorCities
+  | doesAnyConnectL c1 c2 ls = error "A link already exists."
+  | otherwise = Reg cs (newL c1 c2 q : ls) ts
+
 
 addLinkForT :: City -> City -> [Link] -> [Link] -> [Link]
-addLinkForT city1 city2 [] foundL = error "Necesary links do not exist."
-addLinkForT city1 city2 (l:ls) foundL 
-  | linksL city1 city2 l == True = l : foundL
-  | otherwise = addLinkForT city1 city2 ls foundL
+addLinkForT c1 c2 [] foundL = error "Necesary links do not exist."
+addLinkForT c1 c2 (l:ls) foundL
+  | linksL c1 c2 l = l : foundL
+  | otherwise = addLinkForT c1 c2 ls foundL
 
 linksForT :: Region -> [City] -> [Link] -> [Link]
-linksForT region@(Reg _ links _) (c1 : ( c2 : cs)) foundL 
-  | null cs == True = addLinkForT c1 c2 links foundL
-  | otherwise = linksForT region (c2 : cs) (addLinkForT c1 c2 links foundL)
+linksForT r@(Reg _ ls _) (c1 : ( c2 : cs)) foundL
+  | null cs = addLinkForT c1 c2 ls foundL
+  | otherwise = linksForT r (c2 : cs) (addLinkForT c1 c2 ls foundL)
 
 isThereAT :: City -> City -> [Tunel] -> Bool
 isThereAT _ _ [] = False
-isThereAT city1 city2 (t:ts) = connectsT city1 city2 t || isThereAT city1 city2 ts
+isThereAT c1 c2 (t:ts) = connectsT c1 c2 t || isThereAT c1 c2 ts
 
-availableCapacityLs :: Region -> [Link] -> Bool
---availableCapacityLs region= foldr (\ l -> (&&) ((capacityL l - usesOfLinkR region l) > 0)) True
---availableCapacityLs region= foldr (\ l -> (&&) ((>) (capacityL l - usesOfLinkR region l) 0)) True
---availableCapacityLs region= foldr (\ l -> (&&) ( flip (>) 0 (capacityL l - usesOfLinkR region l))) True
---availableCapacityLs region= foldr (\ l -> (&&) ( flip (>) 0 ((-) (capacityL l) (usesOfLinkR region l) ) ) ) True
-availableCapacityLs region = foldr (\l -> (&&) ((> 0) ((-) (capacityL l) (usesOfLinkR region l)) )) True
---  all (\l -> (capacityL l - usesOfLinkR region l) > 0) links
+usesOfLinkR :: Region -> Link -> Int
+usesOfLinkR (Reg _ _ []) _ = 0
+usesOfLinkR (Reg cs ls (t:ts)) l
+  | usesT l t = 1 + usesOfLinkR (Reg cs ls ts) l
+  | otherwise = usesOfLinkR (Reg cs ls ts) l
 
-checkAlphabeticalOrderCities :: City -> City -> Bool
-checkAlphabeticalOrderCities city1 city2 = if nameC city1 <= nameC city2 then True else False
+availableCapacityL :: Region -> Link -> Int
+availableCapacityL r l = capacityL l - usesOfLinkR r l
+
+hasCapacityL :: Region -> Link -> Bool
+hasCapacityL r l = availableCapacityL r l > 0
+
+haveCapacityLs :: Region -> [Link] -> Bool
+haveCapacityLs r = foldr ((&&) . hasCapacityL r) True
+
+areCitiesOrdered :: City -> City -> Bool
+areCitiesOrdered c1 c2 = nameC c1 <= nameC c2
 
 checkRepeatedElem :: Eq a => [a] -> Bool
 checkRepeatedElem [] = False
 checkRepeatedElem (e:es) = e `elem` es || checkRepeatedElem es
 
 checkForTunelR :: Region -> [City] -> Bool
-checkForTunelR region@(Reg cities links tunels) cs
-  | areValidCities region (head cs) (last cs) == False || length cs > length links + 1 || checkRepeatedElem cs == True = errorCities
-  | isThereAT (head cs) (last cs) tunels == True = error "This tunel already exists."
-  | checkAlphabeticalOrderCities (head cs) (last cs) == False = error "Connected cities must follow alphabetical order (Tip: Use reverse to invert the list)"
-  | availableCapacityLs region (linksForT region cs []) == False = error "Some link has no available capacity"
+checkForTunelR r@(Reg cs ls ts) cs2
+  | not (areValidCities r (head cs2) (last cs2)) || length cs2 > length ls + 1 || checkRepeatedElem cs2 = errorCities
+  | isThereAT (head cs2) (last cs2) ts = error "This tunel already exists."
+  | not (areCitiesOrdered (head cs2) (last cs2)) = error "Connected cities must follow alphabetical order (Tip: Use reverse to invert the list)"
+  | not (haveCapacityLs r ls2) = error "Some link has no available capacity"
   | otherwise = True
-
+      where ls2 = linksForT r cs2 []
 
 tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
-tunelR region@(Reg cities links tunels) cs 
-  | checkForTunelR region cs == True = Reg cities links (newT (linksForT region cs []): tunels)
+tunelR r@(Reg cs ls ts) cs2
+  | checkForTunelR r cs2 = Reg cs ls (newT ls2: ts)
   | otherwise = error "Tunel cannot be created."
+      where ls2 = linksForT r cs2 []
+
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
-connectedR region@(Reg cities links (t:ts)) city1 city2 
-  | areValidCities region city1 city2 == False = errorCities
-  | null ts = if connectsT city1 city2 t == True then True else False
-  | otherwise = connectsT city1 city2 t || connectedR (Reg cities links ts) city1 city2
+connectedR r@(Reg cs ls (t:ts)) c1 c2
+  | not (areValidCities r c1 c2) = errorCities
+  | null ts = connectsT c1 c2 t
+  | otherwise = connectsT c1 c2 t || connectedR (Reg cs ls ts) c1 c2
+
 
 linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
-linkedR (Reg _ [] _) city1 city2 = False
-linkedR (Reg cities (l:ls) tunels) city1 city2 = linksL city1 city2 l || linkedR (Reg cities ls tunels) city1 city2
+linkedR (Reg _ [] _) _ _ = False
+linkedR (Reg cs (l:ls) ts) c1 c2 = linksL c1 c2 l || linkedR (Reg cs ls ts) c1 c2
+
 
 connectionR :: Region -> City -> City -> Tunel
-connectionR (Reg cities links []) city1 city2 = error "There are no possible tunels in this region."
-connectionR (Reg cities links (t:ts)) city1 city2
-  | connectsT city1 city2 t == True = t
-  | otherwise = connectionR (Reg cities links ts) city1 city2
+connectionR (Reg _ _ []) _ _ = error "There are no possible tunels in this region."
+connectionR (Reg cs ls (t:ts)) c1 c2
+  | connectsT c1 c2 t = t
+  | otherwise = connectionR (Reg cs ls ts) c1 c2
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR region city1 city2 
-  | areValidCities region city1 city2 == False = errorCities
-  | otherwise = delayT (connectionR region city1 city2)
+delayR r c1 c2
+  | not (areValidCities r c1 c2) = errorCities
+  | otherwise = delayT (connectionR r c1 c2)
+
 
 getLinkR :: Region -> City -> City -> Link
-getLinkR (Reg _ [] _) city1 city2 = error "There are no possible links in this region."
-getLinkR region@(Reg cities (l:ls) tunels) city1 city2 
-  | areValidCities region city1 city2 == False = errorCities
-  | linksL city1 city2 l == True = l
-  | otherwise = getLinkR (Reg cities ls tunels) city1 city2
-
-usesOfLinkR :: Region -> Link -> Int
-usesOfLinkR (Reg cities links []) link = 0
-usesOfLinkR (Reg cities links (t:ts)) link 
-  | usesT link t == True = 1 + usesOfLinkR (Reg cities links ts) link
-  | otherwise = usesOfLinkR (Reg cities links ts) link
+getLinkR (Reg _ [] _) _ _ = error "There are no possible links in this region."
+getLinkR r@(Reg cs (l:ls) ts) c1 c2
+  | not (areValidCities r c1 c2) = errorCities
+  | linksL c1 c2 l = l
+  | otherwise = getLinkR (Reg cs ls ts) c1 c2
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForR region city1 city2 
-  | areValidCities region city1 city2 == False = errorCities
-  | otherwise = capacityL link - usesOfLinkR region link
-      where link = getLinkR region city1 city2
+availableCapacityForR r c1 c2
+  | not (areValidCities r c1 c2) = errorCities
+  | otherwise = availableCapacityL r l
+      where l = getLinkR r c1 c2
 
 
 ---------------------------------
@@ -146,7 +151,7 @@ qB = newQ "B" 15 0.5
 
 qC = newQ "C" 5 0.25
 
-lAB = newL cA cB qA 
+lAB = newL cA cB qA
 
 lBC = newL cB cC qB
 
@@ -154,7 +159,7 @@ tAC = newT [lBC, lAB]
 
 rA00 = newR
 
-rA01 = foundR rA00 cA 
+rA01 = foundR rA00 cA
 
 rA02 = foundR rA01 cB
 
@@ -164,23 +169,23 @@ rA04 = linkR rA03 cA cB qA
 
 rA05 = linkR rA04 cB cC qB
 
-rA = tunelR rA05 [cA,cB,cC] 
+rA = tunelR rA05 [cA,cB,cC]
 
 
 tR = [
-  
+
     newR == Reg [] [] [],
-  
+
     rA01 == Reg [cA] [] [],
-  
+
     rA == Reg [cC, cB, cA] [lBC, lAB] [tAC],
-  
+
     connectionR rA cA cC == tAC,
 
     getLinkR rA cA cB == lAB,
 
     usesOfLinkR rA lAB == 1,
-  
+
     True
         ]
 
