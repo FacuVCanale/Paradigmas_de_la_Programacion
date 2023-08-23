@@ -20,6 +20,7 @@ distanceC :: City -> City -> Float
 distanceC c1 c2 = difP (getlocationC c1) (getlocationC c2)
 
 ------------------------------------
+
 pA = newP 0 0
 cA = newC "A" pA
 

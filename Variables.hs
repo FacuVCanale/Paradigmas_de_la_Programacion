@@ -17,6 +17,7 @@ pC = newP 7 7
 pD = newP 9 1
 
 pE = newP 1 2
+
 ---------
 
 cA = newC "A" pA
@@ -38,6 +39,7 @@ qB = newQ "B" 15 0.5
 qC = newQ "C" 5 0.25
 
 qN = newQ "N" 1 0.2
+
 -----------
 
 lAB = newL cA cB qA 
@@ -47,6 +49,7 @@ lBC = newL cB cC qB
 lCD = newL cC cD qN
 
 lDE = newL cD cE qN
+
 -------
 
 tAC = newT [lAB,lBC]

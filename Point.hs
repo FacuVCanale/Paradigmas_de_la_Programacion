@@ -10,4 +10,5 @@ difP :: Point -> Point -> Float
 difP (Poi a b) (Poi x y) = sqrt (fromIntegral ((a - x)^2) + fromIntegral ((b - y)^2))
 
 ---------------------------------
+
 testPoi = newP (-1) 1 == Poi (-1) 1

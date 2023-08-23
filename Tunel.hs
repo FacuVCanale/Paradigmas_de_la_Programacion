@@ -14,28 +14,34 @@ newT :: [Link] -> Tunel
 newT ls = Tun ls
 
 
-correctConnectionTwoLOneSided :: City -> City -> [Link] -> Bool
-correctConnectionTwoLOneSided c1 c2 [l1, l2] = connectsL c1 l1 && not (connectsL c1 l2)
+isAFirstEnd :: City -> [Link] -> Bool
+isAFirstEnd c (l:ls) = connectsL c l && not (connectsL c (head ls))
 
-correctConnectionTwoL :: City -> City -> [Link] -> Bool
-correctConnectionTwoL c1 c2 twoLs = correctConnectionTwoLOneSided c1 c2 twoLs && correctConnectionTwoLOneSided c2 c1 (reverse twoLs)
+areEndCitiesTwoL :: City -> City -> [Link] -> Bool
+areEndCitiesTwoL c1 c2 twoLs
+   | connectsL c1 (head twoLs) =  isAFirstEnd c1 twoLs && isAFirstEnd c2 (reverse twoLs)
+   | otherwise = isAFirstEnd c2 twoLs && isAFirstEnd c1 (reverse twoLs)
 
-correctConnectionVariousLOneSided :: City -> City -> [Link] -> Bool
-correctConnectionVariousLOneSided c1 c2 (l:ls) = connectsL c1 l && not (connectsL c1 (head ls)) && connectsL c2 (last ls) && not (connectsL c2 (last (init ls)))
+isALastEnd :: City -> [Link] -> Bool
+isALastEnd c ls = connectsL c (last ls) && not (connectsL c (last (init ls)))
 
-correctConnectionVariousL :: City -> City -> [Link] -> Bool
-correctConnectionVariousL c1 c2 ls = correctConnectionVariousLOneSided c1 c2 ls || correctConnectionVariousLOneSided c2 c1 ls
+areEndCitiesManyL :: City -> City -> [Link] -> Bool
+areEndCitiesManyL c1 c2 ls
+   | connectsL c1 (head ls) = isAFirstEnd c1 ls && isALastEnd c2 ls
+   | otherwise = isAFirstEnd c2 ls && isALastEnd c1 ls
 
-connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
+connectsT :: City -> City -> Tunel -> Bool
 connectsT c1 c2 (Tun ls)
   | length ls == 1 = linksL c1 c2 (head ls)
-  | length ls == 2 = correctConnectionTwoL c1 c2 ls || correctConnectionTwoL c2 c1 ls
-  | otherwise = correctConnectionVariousL c1 c2 ls || correctConnectionVariousL c2 c1 ls
+  | length ls == 2 = areEndCitiesTwoL c1 c2 ls
+  | otherwise = areEndCitiesManyL c1 c2 ls
 
-usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
+
+usesT :: Link -> Tunel -> Bool
 usesT link (Tun ls) = link `elem` ls
 
-delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
+
+delayT :: Tunel -> Float
 delayT (Tun []) = 0
 delayT (Tun (l:ls)) = delayL l + delayT (Tun ls)
 
@@ -78,12 +84,12 @@ tT = newT [lAB,lBC] == Tun [lAB,lBC]
 
 tC = [
 
-   not (correctConnectionTwoL cA cB [lAB,lBC]),
-   correctConnectionTwoL cA cC [lAB, lBC],
+   not (areEndCitiesTwoL cA cB [lAB,lBC]),
+   areEndCitiesTwoL cA cC [lAB, lBC],
 
-   not (correctConnectionVariousL cA cC [lAB, lBC, lAB]),
-   correctConnectionVariousL cA cD [lAB, lBC, lCD],
+   not (areEndCitiesManyL cA cC [lAB, lBC, lAB]),
+   areEndCitiesManyL cA cD [lAB, lBC, lCD],
 
-   testF (correctConnectionVariousL cA cC [lAB, lBC]),
+   testF (areEndCitiesManyL cA cC [lAB, lBC]),
 
    True]
