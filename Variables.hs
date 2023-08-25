@@ -76,6 +76,10 @@ rA05 = linkR rA04 cB cC qB
 
 rA = tunelR rA05 [cA,cB,cC] 
 
+rA06 = tunelR rA [cA, cB]
+
+rA07 = tunelR rA06 [cB, cC]
+
 
 
 rB00 = newR

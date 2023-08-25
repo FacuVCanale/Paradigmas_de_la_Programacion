@@ -10,9 +10,14 @@ import Link
 
 data Tunel = Tun [Link] deriving (Eq)
 
+
+showEveryLink :: [Link] -> [Char]
+showEveryLink [l] = "   " ++ show l
+showEveryLink (l:ls) = "   " ++ show l ++ "\n" ++ showEveryLink ls
+
 instance Show Tunel where
-  show (Tun links) = 
-    show links 
+  show (Tun ls) = 
+    showEveryLink ls
 
 
 newT :: [Link] -> Tunel

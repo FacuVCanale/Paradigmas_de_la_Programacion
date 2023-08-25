@@ -9,31 +9,25 @@ import Tunel
 
 data Region = Reg [City] [Link] [Tunel] deriving (Eq)
 
+
+showCities :: [City] -> String
+showCities [c] = nameC c
+showCities (c:cs) = nameC c ++ ", " ++ showCities cs
+
+showLinks :: [Link] -> String
+showLinks [l] = "  " ++ show l
+showLinks (l:ls) = "  " ++ show l ++ "\n" ++ showLinks ls
+
+showTunels :: [Tunel] -> Int -> String
+showTunels [t] number = "\nTunel N°" ++ show number ++ "\n" ++ show t 
+showTunels (t:ts) number = "\nTunel N°" ++ show number ++ "\n" ++ show t ++ "\n" ++ showTunels ts (number + 1)
+
+
 instance Show Region where
-  show (Reg cities links tunels) =
-    "Cities: " ++ showCities (reverse cities) ++
-    "\nLinks: " ++ showLinks links ++
-    "\nTunels: " ++ showTunels tunels
-    where
-      showCities [] = ""
-      showCities (c:cs) = nameC c ++ comma cs
-
-      comma [] = ""
-      comma (c:cs) = ", " ++ nameC c ++ comma cs
-
-      showLinks :: [Link] -> String
-      showLinks [] = ""
-      showLinks [l] = show l
-      showLinks (l:ls) = showLinks ls ++ " -> "++ show l
-
-      linkComma [] = ""
-      linkComma (l:ls) = " -> " ++ show l ++ linkComma ls
-
-      showTunels [] = ""
-      showTunels (t:ts) = show t ++ tunelComma ts
-
-      tunelComma [] = ""
-      tunelComma (t:ts) = ", " ++ show t ++ tunelComma ts
+  show (Reg cs ls ts) =
+    "\nCities: " ++ showCities (reverse cs) ++
+    "\n\nLinks:\n" ++ showLinks (reverse ls) ++
+    "\n\nTunels:\n" ++ showTunels (reverse ts) 1 ++ "\n"
 
       
 errorCities = error "Cities provided are not valid."
