@@ -5,7 +5,7 @@ data Quality = Qua String Int Float deriving (Eq)
 
 instance Show Quality where
   show (Qua str cap delay) = 
-    "Quality Name: "++ str ++ "\nCapacity: " ++ show cap ++ "\nDelay:  " ++ show delay 
+    "Quality '"++ str ++ "'\nCapacity: " ++ show cap ++ "\nDelay:  " ++ show delay 
 
 
 checkDataQ :: String -> Int -> Float -> Bool

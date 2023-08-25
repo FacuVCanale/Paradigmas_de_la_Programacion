@@ -9,7 +9,7 @@ data Link = Lin City City Quality deriving (Eq)
 
 instance Show Link where
   show (Lin c1 c2 q) = 
-    nameC c1 ++ " -[" ++ show (capacityQ q) ++ "," ++ show (delayQ q) ++ "]- " ++ nameC c2
+    nameC c1 ++ " -[C:" ++ show (capacityQ q) ++ ", D:" ++ show (delayQ q) ++ "]- " ++ nameC c2
 
 
 errorRepeatedC = error "City provided is repeated."
