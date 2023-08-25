@@ -1,9 +1,13 @@
 module City (City, newC, nameC, distanceC )
     where
 
+
 import Point
 
-data City = Cit String Point deriving (Eq, Show)
+data City = Cit String Point deriving (Eq)
+
+instance Show City where
+  show (Cit name loc) = "City name: " ++ name ++ ", Location coordinates: " ++ show loc
 
 newC :: String -> Point -> City
 newC name loc

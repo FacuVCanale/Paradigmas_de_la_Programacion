@@ -8,7 +8,12 @@ import City
 import Quality
 import Link
 
-data Tunel = Tun [Link] deriving (Eq, Show)
+data Tunel = Tun [Link] deriving (Eq)
+
+instance Show Tunel where
+  show (Tun links) = 
+    show links 
+
 
 newT :: [Link] -> Tunel
 newT ls = Tun ls

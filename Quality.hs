@@ -1,7 +1,12 @@
 module Quality (Quality, newQ, capacityQ, delayQ )
    where
 
-data Quality = Qua String Int Float deriving (Eq, Show)
+data Quality = Qua String Int Float deriving (Eq)
+
+instance Show Quality where
+  show (Qua str cap delay) = 
+    "Quality Name: "++ str ++ "\nCapacity: " ++ show cap ++ "\nDelay:  " ++ show delay 
+
 
 checkDataQ :: String -> Int -> Float -> Bool
 checkDataQ str cap delay = not (null str) && cap > 0 && delay >= 0

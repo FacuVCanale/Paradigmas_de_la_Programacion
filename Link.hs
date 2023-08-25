@@ -5,7 +5,12 @@ import Point
 import City
 import Quality
 
-data Link = Lin City City Quality deriving (Eq, Show)
+data Link = Lin City City Quality deriving (Eq)
+
+instance Show Link where
+  show (Lin c1 c2 q) = 
+    nameC c1 ++ " -[" ++ show (capacityQ q) ++ "," ++ show (delayQ q) ++ "]- " ++ nameC c2
+
 
 errorRepeatedC = error "City provided is repeated."
 

@@ -1,7 +1,12 @@
 module Point (Point , newP, difP)
    where
 
-data Point = Poi Int Int deriving (Eq, Show)
+data Point = Poi Int Int deriving (Eq)
+
+
+instance Show Point where
+  show (Poi x y) = show (x,y)
+
 
 newP :: Int -> Int -> Point
 newP a b = Poi a b

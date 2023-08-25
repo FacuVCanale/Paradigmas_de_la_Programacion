@@ -7,8 +7,35 @@ import Link
 import Quality
 import Tunel
 
-data Region = Reg [City] [Link] [Tunel] deriving (Eq, Show)
+data Region = Reg [City] [Link] [Tunel] deriving (Eq)
 
+instance Show Region where
+  show (Reg cities links tunels) =
+    "Cities: " ++ showCities (reverse cities) ++
+    "\nLinks: " ++ showLinks links ++
+    "\nTunels: " ++ showTunels tunels
+    where
+      showCities [] = ""
+      showCities (c:cs) = nameC c ++ comma cs
+
+      comma [] = ""
+      comma (c:cs) = ", " ++ nameC c ++ comma cs
+
+      showLinks :: [Link] -> String
+      showLinks [] = ""
+      showLinks [l] = show l
+      showLinks (l:ls) = showLinks ls ++ " -> "++ show l
+
+      linkComma [] = ""
+      linkComma (l:ls) = " -> " ++ show l ++ linkComma ls
+
+      showTunels [] = ""
+      showTunels (t:ts) = show t ++ tunelComma ts
+
+      tunelComma [] = ""
+      tunelComma (t:ts) = ", " ++ show t ++ tunelComma ts
+
+      
 errorCities = error "Cities provided are not valid."
 
 newR :: Region
