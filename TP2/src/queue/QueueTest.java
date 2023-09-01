@@ -23,7 +23,7 @@ public class QueueTest {
   @Test public void test04TakeRemovesElementsFromTheQueue() {
     Queue queue = new Queue().add( "Something" );
     queue.take();
-    
+
     assertTrue( queue.isEmpty() );
   }
 
@@ -31,7 +31,7 @@ public class QueueTest {
     Queue queue = new Queue();
     String addedObject = "Something";
     queue.add( addedObject );
-    
+
     assertEquals( addedObject, queue.take() );
   }
 

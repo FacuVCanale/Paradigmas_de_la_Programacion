@@ -3,7 +3,7 @@ package queue;
 import java.util.ArrayList;
 
 public class Queue {
-	ArrayList<String> queue = new ArrayList<>();
+	private final ArrayList<String>queue = new ArrayList<>();
   public boolean isEmpty() {
 		// TODO Auto-generated method stub
 
@@ -18,17 +18,20 @@ public class Queue {
 
 	public Object take() {
     // TODO Auto-generated method stub
-		if (!queue.isEmpty()) {
+		try {
 			return queue.remove(0);
-		}
-		else{
-			throw new RuntimeException("Queue is empty");
+		} catch (IndexOutOfBoundsException e) {
+			throw new Error("Queue is empty");
 		}
 	}
 
 	public Object head() {
 		// TODO Auto-generated method stub
-    return queue.get(0);
+		try {
+			return queue.get(0);
+		} catch (IndexOutOfBoundsException e) {
+			throw new Error("Queue is empty");
+		}
 	}
 
 	public int size() {
