@@ -1,30 +1,38 @@
 package queue;
 
+import java.util.ArrayList;
+
 public class Queue {
-	private CustomArray queue = new EmptyArray();
 
+    public ArrayList<Container> queue;
 
-  public boolean isEmpty() {
-		return size()==0;
-	}
+    public Queue() {
+        queue = new ArrayList<>();
+        EmptyContainer emptyContainer = new EmptyContainer();
+        queue.add(emptyContainer);
+    }
 
-	public Queue add( Object  cargo ) {
-		queue = queue.add( cargo );
-		return this;
-	}
+    public Queue add(Object cargo) {
+        queue.add(queue.size()-2, new NonEmptyContainer(cargo));
+        return this;
+    }
 
-	public Object take() {
-	  	Object head = head();
-		queue = queue.remove_head();
-		return head;
-	}
+    public Object take() {
+        this.head();
+        Container removed_container = queue.remove(0);
+        return removed_container.head();
+    }
 
-	public Object head() {
-		return queue.head();
-	}
+    public Object head() {
+        Container contain = queue.get(0);
+        return contain.head();
+    }
 
-	public int size() {
-		return queue.size();
-	}
+    public boolean isEmpty() {
+        return queue.size()==1;
+    }
 
+    public int size() {
+        return queue.size()-1;
+    }
 }

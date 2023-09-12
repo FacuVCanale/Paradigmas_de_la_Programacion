@@ -80,7 +80,7 @@ public class QueueTest {
     }
   }
 
-  @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
+  @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() { //  tira error porq estoy haciendo size -2
     Queue queue = new Queue();
     queue.add( "Something" );
     queue.take();
