@@ -13,26 +13,26 @@ public class Queue {
     }
 
     public Queue add(Object cargo) {
-        queue.add(queue.size()-2, new NonEmptyContainer(cargo));
+        queue.add(size(), new FilledContainer(cargo));
         return this;
     }
 
-    public Object take() {
-        this.head();
-        Container removed_container = queue.remove(0);
-        return removed_container.head();
+    public Object take() {;
+        Container removedContainer = queue.remove(0);
+        return removedContainer.item();
     }
 
     public Object head() {
-        Container contain = queue.get(0);
-        return contain.head();
+        Container firstContainer = queue.get(0);
+        return firstContainer.item();
     }
 
     public boolean isEmpty() {
-        return queue.size()==1;
+        return queue.size() == 1;
     }
 
     public int size() {
-        return queue.size()-1;
+        return queue.size() - 1;
     }
+
 }

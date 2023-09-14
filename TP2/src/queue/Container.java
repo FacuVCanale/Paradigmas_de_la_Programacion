@@ -2,5 +2,6 @@ package queue;
 
 public abstract class Container {
 
-    public abstract Object head();
+    public abstract Object item();
+
 }

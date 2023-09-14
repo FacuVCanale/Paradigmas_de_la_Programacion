@@ -1,9 +1,9 @@
 package queue;
 
-public class EmptyContainer extends Container{
+public class EmptyContainer extends Container {
     public static String EMPTY_QUEUE = "Queue is empty";
 
-    public Error head(){
+    public Error item() {
         return ErrorWhenQueueIsEmpty();
     }
 
