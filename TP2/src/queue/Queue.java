@@ -8,8 +8,7 @@ public class Queue {
 
     public Queue() {
         queue = new ArrayList<>();
-        EmptyContainer emptyContainer = new EmptyContainer();
-        queue.add(emptyContainer);
+        queue.add(new EmptyContainer());
     }
 
     public Queue add(Object cargo) {
@@ -17,14 +16,12 @@ public class Queue {
         return this;
     }
 
-    public Object take() {;
-        Container removedContainer = queue.remove(0);
-        return removedContainer.item();
+    public Object take() {
+        return queue.remove(0).item();
     }
 
     public Object head() {
-        Container firstContainer = queue.get(0);
-        return firstContainer.item();
+        return queue.get(0).item();
     }
 
     public boolean isEmpty() {

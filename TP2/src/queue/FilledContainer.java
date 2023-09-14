@@ -12,5 +12,4 @@ public class FilledContainer extends Container {
         return this.cargo;
     }
 
-
 }
