@@ -3,38 +3,36 @@ package queue;
 import java.util.ArrayList;
 
 public class Queue {
-	private final ArrayList<Object> queue = new ArrayList<>();
-  public boolean isEmpty() {
 
-		return queue.isEmpty();
-	}
+    public ArrayList<Container> queue;
 
-	public Queue add( Object  cargo ) {
+    public Queue() {
+        queue = new ArrayList<>();
+        EmptyContainer emptyContainer = new EmptyContainer();
+        queue.add(emptyContainer);
+    }
 
-		queue.add( cargo);
-		return this;
-	}
+    public Queue add(Object cargo) {
+        queue.add(size(), new FilledContainer(cargo));
+        return this;
+    }
 
-	public Object take() {
-		try {
-			return queue.remove(0);
-		} catch (IndexOutOfBoundsException e) {
-			throw new Error("Queue is empty");
-		}
-	}
+    public Object take() {;
+        Container removedContainer = queue.remove(0);
+        return removedContainer.item();
+    }
 
-	public Object head() {
+    public Object head() {
+        Container firstContainer = queue.get(0);
+        return firstContainer.item();
+    }
 
-		try {
-			return queue.get(0);
-		} catch (IndexOutOfBoundsException e) {
-			throw new Error("Queue is empty");
-		}
-	}
+    public boolean isEmpty() {
+        return queue.size() == 1;
+    }
 
-	public int size() {
-		// TODO Auto-generated method stub
-		return queue.size();
-	}
+    public int size() {
+        return queue.size() - 1;
+    }
 
 }
