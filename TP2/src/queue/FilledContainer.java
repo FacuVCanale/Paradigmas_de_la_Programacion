@@ -8,7 +8,7 @@ public class FilledContainer extends Container {
         this.cargo = cargo;
     }
 
-    public Object item() {
+    public Object getContainerItem() {
         return this.cargo;
     }
 

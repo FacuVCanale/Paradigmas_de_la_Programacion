@@ -1,12 +1,12 @@
 package queue;
 
 public class EmptyContainer extends Container {
+    public static String EMPTY_QUEUE = "Queue is empty";
 
-    public Object item() {
+    public Object getContainerItem() {
         throw new Error(EMPTY_QUEUE);
     }
 
-    public static String EMPTY_QUEUE = "Queue is empty";
 
 }
 
