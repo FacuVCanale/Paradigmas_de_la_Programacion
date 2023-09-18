@@ -73,25 +73,25 @@ public class QueueTest {
 
     @Test
     public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
-        assertThrowsLike(EmptyContainer.EMPTY_QUEUE,
+        assertThrowsLike(EmptyContainer.EMPTY_QUEUE_ERROR_MESSAGE,
                 () -> new Queue().take());
     }
 
     @Test
     public void test11CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-        assertThrowsLike(EmptyContainer.EMPTY_QUEUE,
+        assertThrowsLike(EmptyContainer.EMPTY_QUEUE_ERROR_MESSAGE,
                 () -> emptyQueueThatHadAString().take());
     }
 
     @Test
     public void test12CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-        assertThrowsLike(EmptyContainer.EMPTY_QUEUE,
+        assertThrowsLike(EmptyContainer.EMPTY_QUEUE_ERROR_MESSAGE,
                 () -> new Queue().head());
     }
 
 
-    private void assertThrowsLike(String expectedErrorMessage, Executable lambdaFunction) {
-        assertEquals(expectedErrorMessage, assertThrows(Error.class, lambdaFunction).getMessage());
+    private void assertThrowsLike(String expectedErrorMessage, Executable errorfulAction) {
+        assertEquals(expectedErrorMessage, assertThrows(Error.class, errorfulAction).getMessage());
     }
 
     private Queue queueWithFirstAndSecondObject() {
