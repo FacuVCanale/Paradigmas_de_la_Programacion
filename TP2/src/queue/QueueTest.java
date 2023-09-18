@@ -90,8 +90,8 @@ public class QueueTest {
     }
 
 
-    private void assertThrowsLike(String expectedErrorMessage, Executable errorfulAction) {
-        assertEquals(expectedErrorMessage, assertThrows(Error.class, errorfulAction).getMessage());
+    private void assertThrowsLike(String expectedErrorMessage, Executable ActionThatThrowsAnError) {
+        assertEquals(expectedErrorMessage, assertThrows(Error.class, ActionThatThrowsAnError).getMessage());
     }
 
     private Queue queueWithFirstAndSecondObject() {
