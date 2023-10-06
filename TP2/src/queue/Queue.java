@@ -17,11 +17,11 @@ public class Queue {
     }
 
     public Object take() {
-        return queue.remove(0).item();
+        return queue.remove(0).getContainerItem();
     }
 
     public Object head() {
-        return queue.get(0).item();
+        return queue.get(0).getContainerItem();
     }
 
     public boolean isEmpty() {
