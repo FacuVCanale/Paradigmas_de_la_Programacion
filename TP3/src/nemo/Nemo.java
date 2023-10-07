@@ -1,80 +1,41 @@
 package nemo;
 
+
+import java.util.HashMap;
+
 public class Nemo {
-    public Coordinate coordinates = new Coordinate(0, 0, 0);
-    public String orientation = "N";
+    public Coordinate position;
+    public Orientation orientation;
 
-    public Launcher launcher = new Launcher(10); //hardcoded
+    private HashMap<Character, Runnable> commands = new HashMap<>();
 
-    public Nemo() {
-    }
+    public Launcher launcher;
 
-    public Nemo d() {
-        coordinates.z--;
-        return this;
-    }
-
-    public Nemo u() {
-        coordinates.z++;
-        return this;
-    }
-
-    public Nemo l() {
-        switch (orientation) {
-            case "N":
-                orientation = "W";
-                break;
-            case "W":
-                orientation = "S";
-                break;
-            case "S":
-                orientation = "E";
-                break;
-            case "E":
-                orientation = "N";
-                break;
+    public Nemo(Coordinate position, Orientation orientation, int charges) {
+        this.position = position;
+        this.orientation = orientation;
+        this.launcher = new Launcher(charges);
+        initializeCommands();
         }
-        return this;
-    }
 
-    public Nemo r() {
-        switch (orientation) {
-            case "N":
-                orientation = "E";
-                break;
-            case "E":
-                orientation = "S";
-                break;
-            case "S":
-                orientation = "W";
-                break;
-            case "W":
-                orientation = "N";
-                break;
+        private void initializeCommands() {
+            commands.put('d', () -> position.z--);
+            commands.put('u', () -> position.z++);
+            commands.put('l', () -> orientation = orientation.rotateLeft());
+            commands.put('r', () -> orientation = orientation.rotateRight());
+            commands.put('f', ()-> position = orientation.moveForward(position));
+            commands.put('m', () -> launcher.launch());
         }
-        return this;
-    }
 
-    public Nemo f() {
-        switch (orientation) {
-            case "N":
-                coordinates.y++;
-                break;
-            case "E":
-                coordinates.x++;
-                break;
-            case "S":
-                coordinates.y--;
-                break;
-            case "W":
-                coordinates.x--;
-                break;
+        public void receiveCommands (String commands) {
+        commands.chars().forEach( each -> this.processCommands((char) each));
         }
-        return this;
+
+        public void processCommands(char comando) {
+            if (commands.containsKey(comando)) {
+                commands.get(comando).run();
+            }
+        }
+
     }
 
-    public Nemo m() {
-        launcher.launch();
-        return this;
-    }
-}
