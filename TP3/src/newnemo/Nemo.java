@@ -1,6 +1,9 @@
 package newnemo;
 
+import java.lang.reflect.Array;
+import java.net.CookieHandler;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Nemo {
     private Position position;
@@ -8,9 +11,10 @@ public class Nemo {
 
     private ArrayList<Command> commands;
 
-    public Nemo(Position position, Orientation orientation) {
+    public Nemo(Position position, Orientation orientation, ArrayList<Command> commands) {
         this.position = position;
         this.orientation = orientation;
+        this.commands = commands;
     }
 
     public Position getPosition() {
@@ -31,9 +35,15 @@ public class Nemo {
         return this;
     }
 
-    public Nemo receiveCommand(char commandName) {
-        Command command = commands.stream().filter(each -> each.getName() == commandName).findFirst().orElseThrow();
-        command.execute();
+    public Nemo runCommands(String instructions) {
+        instructions.chars().forEach((instruction -> {
+            commands.stream().
+                    filter(command -> Objects.equals(command.name(),
+                                                String.valueOf( (char) instruction)))
+                    .forEach(command -> {
+                    command.runCommand(this);
+            });
+        }));
         return this;
     }
 

@@ -22,15 +22,34 @@ public class Position {
         return z;
     }
 
+    public Position turnUp() {
+        if (z == 0) {
+            return new Position(this.getX(), this.getY(), 0);
+        }
+        return new Position(this.getX(), this.getY(), this.getZ() + 1);
+    }
+
+    public Position turnDown() {
+        return new Position(this.getX(), this.getY(), this.getZ() - 1);
+    }
+
+    /*public boolean canShoot() {
+        return this.getZ() == 0 || this.getZ() == 1;
+    }*/
+
     public boolean equals(Object other) {
         if (other instanceof Position) {
             Position aPosition = (Position) other;
-            return x == aPosition.x && y == aPosition.y && z == aPosition.z;
+            return this.getX() == aPosition.getX() && this.getY() == aPosition.getY() && this.getZ() == aPosition.getZ();
         }
         return false;
     }
 
     public int hashCode() {
-        return Integer.hashCode(x) + Integer.hashCode(y) + Integer.hashCode(z);
+        return Integer.hashCode(this.getX()) + Integer.hashCode(this.getY()) + Integer.hashCode(this.getZ());
+    }
+
+    public String toString() {
+        return "(" + this.getX() + ", " + this.getY() + ", " + this.getZ() + ")";
     }
 }

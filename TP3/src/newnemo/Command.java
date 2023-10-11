@@ -1,22 +1,22 @@
 package newnemo;
 
-import org.junit.jupiter.api.function.Executable;
+import java.util.function.Consumer;
 
 public class Command {
-    private char name;
+    private String name;
 
-    private Executable action;
+    private Consumer<Nemo> action;
 
-    public Command(char name, Executable action) {
+    public Command(String name, Consumer<Nemo> action) {
         this.name = name;
         this.action = action;
     }
 
-    public char getName() {
+    public String name() {
         return name;
     }
 
-    public void execute() throws Throwable {
-        action.execute();
+    public void runCommand(Nemo nemo) {
+        action.accept(nemo);
     }
 }
