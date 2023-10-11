@@ -13,7 +13,7 @@ public class SouthOrientation extends Orientation {
         return new WestOrientation();
     }
 
-    public Coordinate moveForward(Coordinate position) {
-        return new Coordinate(position.x, position.y - 1, position.z);
+    public Position moveForward(Position position) {
+        return new Position(position.x, position.y - 1, position.z);
     }
 }

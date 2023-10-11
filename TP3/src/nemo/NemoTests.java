@@ -9,20 +9,20 @@ public class NemoTests {
 
     private Orientation north;
 
-    private Coordinate origin;
+    private Position origin;
 
     private Nemo nemo;
 
     @BeforeEach
     public void setUp() {
         north  = new NorthOrientation();
-        origin = new Coordinate(0,0,0);
+        origin = new Position(0,0,0);
         nemo = new Nemo(origin, north, 1);
     }
 
     @Test
     public void test01NemoCoordsAreOrigin() {
-        assertEquals(new Coordinate(0,0,0), nemo.position);
+        assertEquals(new Position(0,0,0), nemo.position);
     }
 
     @Test
@@ -33,13 +33,13 @@ public class NemoTests {
     @Test
     public void test03SubmarineCanGoDown() {
         nemo.receiveCommands("d");
-        assertEquals(new Coordinate(0,0,-1), nemo.position);
+        assertEquals(new Position(0,0,-1), nemo.position);
     }
 
     @Test
     public void test04SubmarineCanGoUp() {
         nemo.receiveCommands("u");
-        assertEquals(new Coordinate(0,0,1), nemo.position);
+        assertEquals(new Position(0,0,1), nemo.position);
     }
 
     @Test
@@ -57,13 +57,13 @@ public class NemoTests {
     @Test
     public void test07SubmarineCanGoForward() {
       nemo.receiveCommands("f");
-      assertEquals(new Coordinate(0,1,0), nemo.position);
+      assertEquals(new Position(0,1,0), nemo.position);
     }
 
     @Test
     public void test08SubmarineCanGoDownAndUp() {
         nemo.receiveCommands("du");
-        assertEquals(new Coordinate(0,0,0), nemo.position);
+        assertEquals(new Position(0,0,0), nemo.position);
     }
 
     @Test

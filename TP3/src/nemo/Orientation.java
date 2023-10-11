@@ -6,7 +6,7 @@ public abstract class Orientation {
 
     public abstract Orientation rotateLeft();
     public abstract Orientation rotateRight();
-    public abstract Coordinate moveForward(Coordinate position);
+    public abstract Position moveForward(Position position);
 
     @Override
     public boolean equals(Object other) {

@@ -1,7 +1,5 @@
 package nemo;
 
-import javax.naming.NameNotFoundException;
-
 public class WestOrientation extends Orientation {
 
     public WestOrientation() {
@@ -16,7 +14,7 @@ public class WestOrientation extends Orientation {
         return new NorthOrientation();
     }
 
-    public Coordinate moveForward(Coordinate position) {
-        return new Coordinate(position.x - 1, position.y, position.z);
+    public Position moveForward(Position position) {
+        return new Position(position.x - 1, position.y, position.z);
     }
 }

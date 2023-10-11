@@ -1,11 +1,11 @@
 package nemo;
 
-public class Coordinate {
+public class Position {
     public int x;
     public int y;
     public int z;
 
-    public Coordinate(int x, int y, int z) {
+    public Position(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -17,12 +17,16 @@ public class Coordinate {
     }
 
     public boolean equals(Object anObject) {
-        if (anObject instanceof Coordinate) {
-            Coordinate aCoordinate = (Coordinate) anObject;
+        if (anObject instanceof Position) {
+            Position aCoordinate = (Position) anObject;
             return x == aCoordinate.x && y == aCoordinate.y && z == aCoordinate.z;
         }
         return false;
     }
+
+
+
+
 
     public int hashCode() {
         return Integer.hashCode(x) + Integer.hashCode(y) + Integer.hashCode(z);
