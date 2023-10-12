@@ -1,42 +1,60 @@
 package nemo;
 
-public class Nemo {
-    public Position position;
-    public Orientation orientation;
-    public Launcher launcher;
+import java.util.ArrayList;
+import java.util.Objects;
 
-    public Nemo(Position position, Orientation orientation, int charges) {
+public class Nemo {
+    private Position position;
+    private Orientation orientation;
+
+    private Depth depth;
+
+    private ArrayList<Command> commands;
+
+    public Nemo(Position position, Orientation orientation, ArrayList<Command> commands, Depth depth) {
         this.position = position;
         this.orientation = orientation;
-        this.launcher = new Launcher(charges);
-        }
-
-        public void receiveCommands (String commands) {
-        commands.chars().forEach( each -> this.processCommands((char) each));
-        }
-
-        public void processCommands(char command) {
-            switch (command) {
-                case 'd':
-                    position.z--;
-                    break;
-                case 'u':
-                    position.z++;
-                    break;
-                case 'l':
-                    orientation = orientation.rotateLeft();
-                    break;
-                case 'r':
-                    orientation = orientation.rotateRight();
-                    break;
-                case 'f':
-                    position = orientation.moveForward(position);
-                    break;
-                case 'm':
-                    launcher.launch();
-                    break;
-            }
-        }
-
+        this.commands = commands;
+        this.depth = depth;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public Nemo setPosition(Position position) {
+        this.position = position;
+        return this;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public Nemo setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+        return this;
+    }
+
+    public Depth getDepth() {
+        return depth;
+    }
+
+    public Nemo setDepth(Depth depth) {
+        this.depth = depth;
+        return this;
+    }
+
+    public Nemo runCommands(String instructions) {
+        instructions.chars().forEach((instruction -> {
+            commands.stream().
+                    filter(command -> Objects.equals(command.name(),
+                                                String.valueOf( (char) instruction)))
+                    .forEach(command -> {
+                    command.runCommand(this);
+            });
+        }));
+        return this;
+    }
+
+}

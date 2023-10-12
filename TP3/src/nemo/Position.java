@@ -1,34 +1,35 @@
 package nemo;
 
 public class Position {
-    public int x;
-    public int y;
-    public int z;
+    private int x;
+    private int y;
 
-    public Position(int x, int y, int z) {
+    public Position(int x, int y) {
         this.x = x;
         this.y = y;
-        this.z = z;
     }
 
-    @Override
-    public String toString() {
-        return "(" + x + ", " + y + ", " + z + ")";
+    public int getX() {
+        return x;
     }
 
-    public boolean equals(Object anObject) {
-        if (anObject instanceof Position) {
-            Position aCoordinate = (Position) anObject;
-            return x == aCoordinate.x && y == aCoordinate.y && z == aCoordinate.z;
+    public int getY() {
+        return y;
+    }
+
+    public boolean equals(Object other) {
+        if (other instanceof Position) {
+            Position aPosition = (Position) other;
+            return this.getX() == aPosition.getX() && this.getY() == aPosition.getY();
         }
         return false;
     }
 
-
-
-
-
     public int hashCode() {
-        return Integer.hashCode(x) + Integer.hashCode(y) + Integer.hashCode(z);
+        return Integer.hashCode(this.getX()) + Integer.hashCode(this.getY());
+    }
+
+    public String toString() {
+        return "(" + this.getX() + ", " + this.getY() + ")";
     }
 }

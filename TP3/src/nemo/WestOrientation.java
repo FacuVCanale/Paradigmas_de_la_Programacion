@@ -1,20 +1,23 @@
 package nemo;
 
 public class WestOrientation extends Orientation {
-
-    public WestOrientation() {
-        this.orientationName = "W";
-    }
-
-    public Orientation rotateLeft() {
+    public Orientation turnLeft() {
         return new SouthOrientation();
     }
 
-    public Orientation rotateRight() {
+    public Orientation turnRight() {
         return new NorthOrientation();
     }
 
     public Position moveForward(Position position) {
-        return new Position(position.x - 1, position.y, position.z);
+        return new Position(position.getX() - 1, position.getY());
+    }
+
+    public boolean equals(Object other) {
+        return other instanceof WestOrientation;
+    }
+
+    public int hashCode() {
+        return 2;
     }
 }

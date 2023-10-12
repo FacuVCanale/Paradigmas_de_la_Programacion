@@ -1,20 +1,13 @@
 package nemo;
 
 public abstract class Orientation {
+    public abstract Orientation turnLeft();
 
-    public String orientationName;
+    public abstract Orientation turnRight();
 
-    public abstract Orientation rotateLeft();
-    public abstract Orientation rotateRight();
     public abstract Position moveForward(Position position);
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Orientation) {
-            Orientation otherOrientation = (Orientation) other;
-            return this.orientationName.equals(otherOrientation.orientationName);
-        }
-        return false;
-    }
+    public abstract boolean equals(Object other);
 
+    public abstract int hashCode();
 }

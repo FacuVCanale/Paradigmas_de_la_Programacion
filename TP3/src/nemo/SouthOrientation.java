@@ -1,19 +1,23 @@
 package nemo;
 
 public class SouthOrientation extends Orientation {
-
-    public SouthOrientation() {
-        this.orientationName = "S";
-    }
-    public Orientation rotateLeft() {
+    public Orientation turnLeft() {
         return new EastOrientation();
     }
 
-    public Orientation rotateRight() {
+    public Orientation turnRight() {
         return new WestOrientation();
     }
 
     public Position moveForward(Position position) {
-        return new Position(position.x, position.y - 1, position.z);
+        return new Position(position.getX(), position.getY() - 1);
+    }
+
+    public boolean equals(Object other) {
+        return other instanceof SouthOrientation;
+    }
+
+    public int hashCode() {
+        return 3;
     }
 }

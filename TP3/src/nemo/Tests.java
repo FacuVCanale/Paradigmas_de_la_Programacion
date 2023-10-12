@@ -1,4 +1,4 @@
-package newnemo;
+package nemo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,13 +9,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class Tests {
-
-    //NO VA ACÁ
-    private String chocolateError = "Releasing the capsule at this depth turns Nemo into a delicious but ill-fated chocolate fountain!";
-
     private ArrayList<Command> commands;
     private Position origin;
     private Orientation north;
+
+    private Depth surface;
 
     private Nemo nemo;
 
@@ -41,23 +39,23 @@ public class Tests {
         commands.add(
                 new Command("u",
                             (Nemo nemo) -> {
-                                nemo.setPosition(nemo.getPosition().turnUp());
+                                nemo.setDepth(nemo.getDepth().turnUp());
                             }));
         commands.add(
                 new Command("d",
                             (Nemo nemo) -> {
-                                nemo.setPosition(nemo.getPosition().turnDown());
+                                nemo.setDepth(nemo.getDepth().turnDown());
                             }));
         commands.add(
                 new Command("m",
                             (Nemo nemo) -> {
-                                if (nemo.getPosition().getZ() <= -2)
-                                    throw new RuntimeException(chocolateError);
+                                nemo.getDepth().shoot();
                             }));
 
-        origin = new Position(0, 0, 0);
+        origin = new Position(0, 0);
         north = new NorthOrientation();
-        nemo = new Nemo(origin, north, commands);
+        surface = new Surface();
+        nemo = new Nemo(origin, north, commands, surface);
     }
 
 
@@ -70,7 +68,7 @@ public class Tests {
     }
 
     @Test void testPositionsCanBeCompared() {
-        assertEquals(new Position(0, 0, 0),  origin);
+        assertEquals(new Position(0, 0),  origin);
     }
 
     @Test void testOrientationCanBeCompared() {
@@ -79,17 +77,12 @@ public class Tests {
 
     @Test void testNemoCanGoDown() {
         nemo.runCommands("d");
-        assertEquals(new Position(0, 0, -1), nemo.getPosition());
-    }
-
-    @Test void testNemoCanGoUp() {
-        nemo.runCommands("du");
-        assertEquals(origin, nemo.getPosition());
+        assertEquals(new FirstLevel(), nemo.getDepth());
     }
 
     @Test void testNemoCanGoForward() {
         nemo.runCommands("f");
-        assertEquals(new Position(0, 1, 0), nemo.getPosition());
+        assertEquals(new Position(0, 1), nemo.getPosition());
     }
 
     @Test void testNemoCanTurnLeft() {
@@ -104,26 +97,33 @@ public class Tests {
 
     @Test void testNemoCanLaunchInOrigin() {
         nemo.runCommands("m");
-        assertEquals(new Position(0, 0, 0), nemo.getPosition());
+        assertEquals(new Position(0, 0), nemo.getPosition());
+    }
+
+    @Test void testNemoCanGoUp() {
+        nemo.runCommands("du");
+        assertEquals(origin, nemo.getPosition());
     }
 
     @Test void testNemoExplodesLaunchingInDepth() {
-        assertEquals(chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ddm")).getMessage());
+        assertEquals(UnshootableLevel.chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ddm")).getMessage());
     }
 
     @Test void testNemoCanTurnRightAndGoForward() {
         nemo.runCommands("rf");
-        assertEquals(new Position(1, 0, 0), nemo.getPosition());
+        assertEquals(new Position(1, 0), nemo.getPosition());
     }
 
     @Test void testNemoCanGoBackwardsRotatingTwice() {
         nemo.runCommands("llf");
-        assertEquals(new Position(0, -1, 0), nemo.getPosition());
+        assertEquals(new Position(0, -1), nemo.getPosition());
     }
 
     @Test void testNemoCanFollowCommandsAndThenExplode() {
         nemo.runCommands("ffdd");
-        assertEquals(new Position(0, 2, -2), nemo.getPosition());
-        assertEquals(chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ffm")).getMessage());
+        assertEquals(new Position(0, 2), nemo.getPosition());
+        assertEquals(UnshootableLevel.chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ffm")).getMessage());
     }
+
+
 }
