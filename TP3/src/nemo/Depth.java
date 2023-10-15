@@ -5,13 +5,19 @@ public abstract class Depth {
 
     public abstract int depth();
 
-    public abstract Depth turnUp();
+    public abstract Depth goUp();
 
-    public abstract Depth turnDown();
+    public abstract Depth goDown();
 
-    public boolean equals(Depth other) {
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Depth && areObjectsEqual((Depth) other);
+    }
+
+    public boolean areObjectsEqual(Depth other) {
         return this.depth() == other.depth();
     }
+
 
     public int hashCode() {
         return this.depth();

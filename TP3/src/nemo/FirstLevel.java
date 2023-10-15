@@ -7,11 +7,11 @@ public class FirstLevel extends Depth {
         return 1;
     }
 
-    public Depth turnUp() {
+    public Depth goUp() {
         return new Surface();
     }
 
-    public Depth turnDown() {
-        return null;
+    public Depth goDown() {
+        return new UnshootableLevel();
     }
 }

@@ -7,15 +7,18 @@ public class Nemo {
     private Position position;
     private Orientation orientation;
 
-    private Depth depth;
+    public ArrayList<Depth> depth;
+
 
     private ArrayList<Command> commands;
 
-    public Nemo(Position position, Orientation orientation, ArrayList<Command> commands, Depth depth) {
+    public Nemo(Position position, Orientation orientation, ArrayList<Command> commands) {
         this.position = position;
         this.orientation = orientation;
         this.commands = commands;
-        this.depth = depth;
+        this.depth = new ArrayList<Depth>();
+        this.depth.add(0, new Surface());
+
     }
 
     public Position getPosition() {
@@ -37,12 +40,24 @@ public class Nemo {
     }
 
     public Depth getDepth() {
-        return depth;
+        return depth.get(0);
     }
 
     public Nemo setDepth(Depth depth) {
-        this.depth = depth;
+        this.depth.add(0, depth);
         return this;
+    }
+
+    public Depth goUp() {
+        Depth UpperDepth = this.depth.remove(0).goUp();
+        this.depth.add(0, UpperDepth);
+        return UpperDepth;
+    }
+
+    public Depth goDown() {
+        Depth LowerDepth = this.depth.get(0).goDown();
+        this.depth.add(0, LowerDepth);
+        return LowerDepth;
     }
 
     public Nemo runCommands(String instructions) {

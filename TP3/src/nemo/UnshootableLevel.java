@@ -13,11 +13,11 @@ public class UnshootableLevel extends Depth {
         return 2;
     }
 
-    public Depth turnUp() {
-        return new FirstLevel();
+    public Depth goUp() { //TODO: FIX THIS!
+        return null;
     }
 
-    public Depth turnDown() {
+    public Depth goDown() {
         return new UnshootableLevel();
     }
 }

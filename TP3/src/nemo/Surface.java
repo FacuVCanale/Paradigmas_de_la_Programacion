@@ -7,11 +7,11 @@ public class Surface extends Depth {
         return 0;
     }
 
-    public Depth turnUp() {
+    public Depth goUp() {
         return this;
     }
 
-    public Depth turnDown() {
+    public Depth goDown() {
         return new FirstLevel();
     }
 }

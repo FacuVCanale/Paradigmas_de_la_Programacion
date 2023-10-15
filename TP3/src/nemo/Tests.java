@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Tests {
     private ArrayList<Command> commands;
@@ -39,12 +41,12 @@ public class Tests {
         commands.add(
                 new Command("u",
                             (Nemo nemo) -> {
-                                nemo.setDepth(nemo.getDepth().turnUp());
+                                nemo.setDepth(nemo.goUp());
                             }));
         commands.add(
                 new Command("d",
                             (Nemo nemo) -> {
-                                nemo.setDepth(nemo.getDepth().turnDown());
+                                nemo.setDepth(nemo.goDown());
                             }));
         commands.add(
                 new Command("m",
@@ -55,7 +57,7 @@ public class Tests {
         origin = new Position(0, 0);
         north = new NorthOrientation();
         surface = new Surface();
-        nemo = new Nemo(origin, north, commands, surface);
+        nemo = new Nemo(origin, north, commands);
     }
 
 
@@ -77,7 +79,30 @@ public class Tests {
 
     @Test void testNemoCanGoDown() {
         nemo.runCommands("d");
+        assertTrue(new Surface() != nemo.getDepth());
         assertEquals(new FirstLevel(), nemo.getDepth());
+    }
+
+    @Test void testNemoCanGoUpAndRemainAtTheSamePlace() {
+        nemo.runCommands("u");
+        assertEquals(origin, nemo.getPosition());
+    }
+
+    @Test void testNemoCanGoDownAndUp() {
+        nemo.runCommands("du");
+        assertEquals(new Surface(), nemo.getDepth());
+    }
+
+    @Test void testNemoCanGoToUnshootableLevelAndGoUpAndRemainThere() {
+        nemo.runCommands("ddddu");
+        assertEquals(new UnshootableLevel(), nemo.getDepth());
+
+    }
+
+    @Test void testNemoCanGoToUnshootableLevelAndThenToSurface() {
+        nemo.runCommands("dddduuuuuu");
+        assertEquals(new Surface(), nemo.getDepth());
+
     }
 
     @Test void testNemoCanGoForward() {
@@ -100,10 +125,6 @@ public class Tests {
         assertEquals(new Position(0, 0), nemo.getPosition());
     }
 
-    @Test void testNemoCanGoUp() {
-        nemo.runCommands("du");
-        assertEquals(origin, nemo.getPosition());
-    }
 
     @Test void testNemoExplodesLaunchingInDepth() {
         assertEquals(UnshootableLevel.chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ddm")).getMessage());
