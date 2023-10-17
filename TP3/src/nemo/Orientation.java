@@ -5,7 +5,7 @@ public abstract class Orientation {
 
     public abstract Orientation turnRight();
 
-    public abstract Position moveForward(Position position);
+    public abstract Position getForwardStepInThisOrientation();
 
     public abstract boolean equals(Object other);
 

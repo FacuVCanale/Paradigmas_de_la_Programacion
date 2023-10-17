@@ -7,11 +7,12 @@ public class Surface extends Depth {
         return 0;
     }
 
-    public Depth goUp() {
+    public Depth goUp(Nemo nemo) {
         return this;
     }
 
-    public Depth goDown() {
-        return new FirstLevel();
+    public Depth goDown(Nemo nemo) {
+        nemo.depth.add(0, new FirstLevel());
+        return this;
     }
 }

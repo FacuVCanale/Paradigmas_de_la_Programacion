@@ -13,11 +13,13 @@ public class UnshootableLevel extends Depth {
         return 2;
     }
 
-    public Depth goUp() { //TODO: FIX THIS!
-        return null;
+    public Depth goUp(Nemo nemo) {
+        nemo.depth.remove(0);
+        return this;
     }
 
-    public Depth goDown() {
-        return new UnshootableLevel();
+    public Depth goDown(Nemo nemo) {
+        nemo.depth.add(0, new UnshootableLevel());
+        return this;
     }
 }

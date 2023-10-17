@@ -9,12 +9,8 @@ public class Position {
         this.y = y;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public Position sum(Position other) {
+        return new Position(this.getX() + other.getX(), this.getY() + other.getY());
     }
 
     public boolean equals(Object other) {
@@ -24,6 +20,14 @@ public class Position {
         }
         return false;
     }
+
+    private int getX() {
+        return x;
+    }
+    private int getY() {
+        return y;
+    }
+
 
     public int hashCode() {
         return Integer.hashCode(this.getX()) + Integer.hashCode(this.getY());

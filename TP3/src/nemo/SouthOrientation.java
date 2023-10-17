@@ -9,8 +9,8 @@ public class SouthOrientation extends Orientation {
         return new WestOrientation();
     }
 
-    public Position moveForward(Position position) {
-        return new Position(position.getX(), position.getY() - 1);
+    public Position getForwardStepInThisOrientation() {
+        return new Position(0, -1);
     }
 
     public boolean equals(Object other) {

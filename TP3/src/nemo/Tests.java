@@ -2,62 +2,22 @@ package nemo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Tests {
-    private ArrayList<Command> commands;
     private Position origin;
     private Orientation north;
-
-    private Depth surface;
-
     private Nemo nemo;
 
     @BeforeEach
     public void setUp() {
-        ArrayList<Command> commands = new ArrayList<>();
-
-        commands.add(
-                new Command("f",
-                            (Nemo nemo) -> {
-                                nemo.setPosition(nemo.getOrientation().moveForward(nemo.getPosition()));
-                            }));
-        commands.add(
-                new Command("l",
-                            (Nemo nemo) -> {
-                                nemo.setOrientation(nemo.getOrientation().turnLeft());
-                            }));
-        commands.add(
-                new Command("r",
-                            (Nemo nemo) -> {
-                                nemo.setOrientation(nemo.getOrientation().turnRight());
-                            }));
-        commands.add(
-                new Command("u",
-                            (Nemo nemo) -> {
-                                nemo.setDepth(nemo.goUp());
-                            }));
-        commands.add(
-                new Command("d",
-                            (Nemo nemo) -> {
-                                nemo.setDepth(nemo.goDown());
-                            }));
-        commands.add(
-                new Command("m",
-                            (Nemo nemo) -> {
-                                nemo.getDepth().shoot();
-                            }));
-
         origin = new Position(0, 0);
         north = new NorthOrientation();
-        surface = new Surface();
-        nemo = new Nemo(origin, north, commands);
+        nemo = new Nemo(origin, north);
     }
 
 
@@ -127,7 +87,7 @@ public class Tests {
 
 
     @Test void testNemoExplodesLaunchingInDepth() {
-        assertEquals(UnshootableLevel.chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ddm")).getMessage());
+        assertThrowsLike(() -> nemo.runCommands("ddm"), UnshootableLevel.chocolateError);
     }
 
     @Test void testNemoCanTurnRightAndGoForward() {
@@ -143,8 +103,10 @@ public class Tests {
     @Test void testNemoCanFollowCommandsAndThenExplode() {
         nemo.runCommands("ffdd");
         assertEquals(new Position(0, 2), nemo.getPosition());
-        assertEquals(UnshootableLevel.chocolateError,assertThrows(Exception.class, () -> nemo.runCommands("ffm")).getMessage());
+        assertThrowsLike(() -> nemo.runCommands("ffm"), UnshootableLevel.chocolateError);
     }
 
-
+    private void assertThrowsLike(Executable executable, String message) {
+        assertEquals(message, assertThrows(Exception.class, executable).getMessage());
+    }
 }
