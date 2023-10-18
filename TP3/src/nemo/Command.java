@@ -6,18 +6,20 @@ import java.util.function.Consumer;
 
 public class Command {
     private String name;
-
     private Consumer<Nemo> action;
 
+    public static ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
+            new Command("f", Nemo::forward),
+            new Command("l", Nemo::left),
+            new Command("r", Nemo::right),
+            new Command("u", Nemo::up),
+            new Command("d", Nemo::down),
+            new Command("m", Nemo::shoot)));
 
-    private static ArrayList commands = Arrays.asList(
-            new Command("f", nemo -> nemo.setPosition(nemo.getPosition().forward(nemo.getOrientation()))),
-            new Command("b", nemo -> nemo.setPosition(nemo.getPosition().backward(nemo.getOrientation()))),
-            new Command("l", nemo -> nemo.setOrientation(nemo.getOrientation().left())),
-            new Command("r", nemo -> nemo.setOrientation(nemo.getOrientation().right())),
-            new Command("u", nemo -> nemo.setDepth(nemo.getDepth().goUp(nemo))),
-            new Command("d", nemo -> nemo.setDepth(nemo.getDepth().goDown(nemo))),
-            new Command("s", nemo -> nemo.getDepth().shoot()));
+    public static Command commandFor(String commandLetter) {
+        return commands.stream().filter(command -> command.applies(commandLetter)).findFirst().get();
+    }
+
     public Command(String name, Consumer<Nemo> action) {
         this.name = name;
         this.action = action;

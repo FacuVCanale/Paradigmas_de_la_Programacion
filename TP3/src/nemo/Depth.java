@@ -1,15 +1,24 @@
 package nemo;
 
+import java.util.ArrayList;
+
 public abstract class Depth {
     public abstract void shoot();
 
     public abstract int depth();
 
-    public abstract Depth goUp(Nemo nemo);
+    public ArrayList<Depth> goUp(Nemo nemo) {
+        ArrayList<Depth> newDepthList =  nemo.getDepthList();
+        newDepthList.remove(0);
+        return newDepthList;
+    }
 
-    public abstract Depth goDown(Nemo nemo);
+    public ArrayList<Depth> goDown(Nemo nemo) {
+        ArrayList<Depth> newDepthList =  nemo.getDepthList();
+        newDepthList.add(0, new UnshootableLevel());
+        return newDepthList;
+    }
 
-    @Override
     public boolean equals(Object other) {
         return other instanceof Depth && areObjectsEqual((Depth) other);
     }

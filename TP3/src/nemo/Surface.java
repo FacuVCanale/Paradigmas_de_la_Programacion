@@ -1,5 +1,8 @@
 package nemo;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Surface extends Depth {
     public void shoot() {}
 
@@ -7,12 +10,13 @@ public class Surface extends Depth {
         return 0;
     }
 
-    public Depth goUp(Nemo nemo) {
-        return this;
+    public ArrayList<Depth> goUp(Nemo nemo) {
+        return nemo.getDepthList();
     }
 
-    public Depth goDown(Nemo nemo) {
-        nemo.depth.add(0, new FirstLevel());
-        return this;
+    public ArrayList<Depth> goDown(Nemo nemo) {
+        ArrayList<Depth> newDepthList = nemo.getDepthList();
+        newDepthList.add(0, new FirstLevel());
+        return newDepthList;
     }
 }

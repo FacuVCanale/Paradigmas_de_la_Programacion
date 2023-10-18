@@ -1,21 +1,16 @@
 package nemo;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Nemo {
     private Position position;
     private Orientation orientation;
-    public ArrayList<Depth> depth = new ArrayList<Depth>();
-
-    private ArrayList<Command> commands = new ArrayList<Command>();
+    private ArrayList<Depth> depth = new ArrayList<Depth>();
 
     public Nemo(Position position, Orientation orientation) {
         this.position = position;
         this.orientation = orientation;
         this.depth.add(new Surface());
-
-
     }
 
     public Position getPosition() {
@@ -30,14 +25,44 @@ public class Nemo {
         return depth.get(0);
     }
 
+    public ArrayList<Depth> getDepthList() {
+        return depth;
+    }
+
     public Nemo runCommands(String instructions) {
-        instructions.chars().forEach((instruction -> {
-            commands.stream().
-                    filter(command -> command.applies((String.valueOf((char) instruction))))
-                    .forEach(command -> {
-                    command.runCommand(this);
-            });
-        }));
+        instructions.chars().forEach(instruction -> {
+            Command.commandFor(String.valueOf((char) instruction)).runCommand(this);
+        });
+        return this;
+    }
+
+    public Nemo forward() {
+        setPosition(getPosition().sum(getOrientation().getForwardStepInThisOrientation()));
+        return this;
+    }
+
+    public Nemo left() {
+        setOrientation(getOrientation().turnLeft());
+        return this;
+    }
+
+    public Nemo right() {
+        setOrientation(getOrientation().turnRight());
+        return this;
+    }
+
+    public Nemo shoot() {
+        getDepth().shoot();
+        return this;
+    }
+
+    public Nemo up() {
+        setDepth(getDepth().goUp(this));
+        return this;
+    }
+
+    public Nemo down() {
+        getDepth().goDown(this);
         return this;
     }
 
@@ -51,20 +76,9 @@ public class Nemo {
         return this;
     }
 
-    private Nemo setDepth(Depth depth) {
-        this.depth.add(0, depth);
+    private Nemo setDepth(ArrayList<Depth> depths) {
+        this.depth = depths;
         return this;
     }
 
-    /*private Depth goUp() {
-        Depth UpperDepth = this.depth.get(0).goUp(this);
-        this.depth.add(0, UpperDepth);
-        return UpperDepth;
-    }
-
-    private Depth goDown() {
-        Depth LowerDepth = this.depth.get(0).goDown();
-        this.depth.add(0, LowerDepth);
-        return LowerDepth;
-    }*/
 }

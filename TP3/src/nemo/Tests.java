@@ -39,7 +39,6 @@ public class Tests {
 
     @Test void testNemoCanGoDown() {
         nemo.runCommands("d");
-        assertTrue(new Surface() != nemo.getDepth());
         assertEquals(new FirstLevel(), nemo.getDepth());
     }
 
@@ -56,7 +55,6 @@ public class Tests {
     @Test void testNemoCanGoToUnshootableLevelAndGoUpAndRemainThere() {
         nemo.runCommands("ddddu");
         assertEquals(new UnshootableLevel(), nemo.getDepth());
-
     }
 
     @Test void testNemoCanGoToUnshootableLevelAndThenToSurface() {
