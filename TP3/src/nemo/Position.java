@@ -14,20 +14,18 @@ public class Position {
     }
 
     public boolean equals(Object other) {
-        if (other instanceof Position) {
-            Position aPosition = (Position) other;
-            return this.getX() == aPosition.getX() && this.getY() == aPosition.getY();
-        }
-        return false;
+        return other instanceof Position &&
+                this.getX() == ((Position) other).getX() &&
+                this.getY() == ((Position) other).getY();
     }
 
     private int getX() {
         return x;
     }
+
     private int getY() {
         return y;
     }
-
 
     public int hashCode() {
         return Integer.hashCode(this.getX()) + Integer.hashCode(this.getY());

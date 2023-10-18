@@ -6,21 +6,21 @@ import java.util.function.Consumer;
 
 public class Command {
     private String name;
-    private Consumer<Nemo> action;
+    private Consumer<Submarine> action;
 
     public static ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
-            new Command("f", Nemo::forward),
-            new Command("l", Nemo::left),
-            new Command("r", Nemo::right),
-            new Command("u", Nemo::up),
-            new Command("d", Nemo::down),
-            new Command("m", Nemo::shoot)));
+            new Command("f", Submarine::forward),
+            new Command("l", Submarine::left),
+            new Command("r", Submarine::right),
+            new Command("u", Submarine::up),
+            new Command("d", Submarine::down),
+            new Command("m", Submarine::shoot)));
 
     public static Command commandFor(String commandLetter) {
         return commands.stream().filter(command -> command.applies(commandLetter)).findFirst().get();
     }
 
-    public Command(String name, Consumer<Nemo> action) {
+    public Command(String name, Consumer<Submarine> action) {
         this.name = name;
         this.action = action;
     }
@@ -29,7 +29,8 @@ public class Command {
         return name.equals(commandName);
     }
 
-    public void runCommand(Nemo nemo) {
+    public void runCommand(Submarine nemo) {
         action.accept(nemo);
     }
+
 }
