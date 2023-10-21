@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SubmarineTests {
+public class Tests  {
     private Position origin;
     private Orientation north;
     private Submarine nemo;
@@ -101,7 +101,7 @@ public class SubmarineTests {
     @Test void testNemoCanGoToUnshootableLevelAndGoUpAndRemainThere() {
         nemo.runCommands("ddddu");
         assertEquals(3, nemo.depth());
-        assertEquals(new UnshootableLevelNavigator(), nemo.diveNavigator());
+        assertEquals(new UnshootableLevelNavigator(3), nemo.diveNavigator());
     }
 
     @Test void testNemoCanGoToUnshootableLevelAndThenToSurface() {
@@ -109,7 +109,6 @@ public class SubmarineTests {
         assertEquals(0, nemo.depth());
         assertEquals(new SurfaceNavigator(), nemo.diveNavigator());
     }
-
     @Test void testNemoExplodesLaunchingInUnshootableDepth() {
         assertThrowsLike(() -> nemo.runCommands("ddm"), UnshootableLevelNavigator.chocolateError);
     }

@@ -30,7 +30,7 @@ public class Submarine {
     }
 
     public int depth() {
-        return diveNavigatorList().size() - 1;
+        return diveNavigator().depth();
     }
 
     public Submarine runCommands(String instructions) {
