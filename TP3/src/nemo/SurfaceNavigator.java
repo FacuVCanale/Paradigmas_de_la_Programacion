@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class SurfaceNavigator extends DiveNavigator {
 
     public SurfaceNavigator() {
-        this.z = 0;
+        this.depth = 0;
     }
 
     public boolean equals(Object other) {

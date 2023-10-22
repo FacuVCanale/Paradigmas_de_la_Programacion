@@ -14,19 +14,19 @@ public class Submarine {
     }
 
     public Position position() {
-        return position;
+        return this.position;
     }
 
     public Orientation orientation() {
-        return orientation;
+        return this.orientation;
     }
 
     public DiveNavigator diveNavigator() {
-        return diveNavigatorList.get(0);
+        return this.diveNavigatorList.get(0);
     }
 
     public ArrayList<DiveNavigator> diveNavigatorList() {
-        return diveNavigatorList;
+        return this.diveNavigatorList;
     }
 
     public int depth() {

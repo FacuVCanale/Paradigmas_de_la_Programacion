@@ -1,12 +1,10 @@
 package nemo;
 
-import java.util.ArrayList;
-
 public class UnshootableLevelNavigator extends DiveNavigator {
     public static String chocolateError = "Releasing the capsule at this depth turns Nemo into a delicious but ill-fated chocolate fountain!";
 
-    public UnshootableLevelNavigator(int z) {
-        this.z = z;
+    public UnshootableLevelNavigator(int depth) {
+        this.depth = depth;
     }
 
     public void shoot() {
@@ -14,6 +12,7 @@ public class UnshootableLevelNavigator extends DiveNavigator {
     }
 
     public boolean equals(Object other) {
-        return other instanceof UnshootableLevelNavigator;
+        return other instanceof UnshootableLevelNavigator &&
+                ((UnshootableLevelNavigator) other).depth == this.depth;
     }
 }

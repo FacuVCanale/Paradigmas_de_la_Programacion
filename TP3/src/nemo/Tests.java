@@ -40,8 +40,14 @@ public class Tests  {
     @Test void testNavigatorsCanBeCompared() {
         DiveNavigator surfaceNavigator = new SurfaceNavigator();
         DiveNavigator firstLevelNavigator = new ShootableLevelNavigator();
+        DiveNavigator unshootableLevel2Navigatior = new UnshootableLevelNavigator(2);
+        DiveNavigator unshootableLevel3Navigatior = new UnshootableLevelNavigator(3);
+
         assertEquals(new SurfaceNavigator(), surfaceNavigator);
         assertNotEquals(surfaceNavigator, firstLevelNavigator);
+        assertNotEquals(firstLevelNavigator, unshootableLevel2Navigatior);
+        assertEquals(new UnshootableLevelNavigator(2), unshootableLevel2Navigatior);
+        assertNotEquals(unshootableLevel2Navigatior, unshootableLevel3Navigatior);
     }
 
     @Test void testNemoIsInSurface() {
@@ -86,6 +92,17 @@ public class Tests  {
         assertEquals(new ShootableLevelNavigator(), nemo.diveNavigator());
     }
 
+    @Test void testNemoCanGoDownToShootableLevelAndShoot() {
+        nemo.runCommands("dm");
+        assertEquals(1, nemo.depth());
+        assertEquals(new ShootableLevelNavigator(), nemo.diveNavigator());
+    }
+
+    @Test void testNemoCanGoDownToUnshootableLevel() {
+        nemo.runCommands("dd");
+        assertEquals(new UnshootableLevelNavigator(2), nemo.diveNavigator());
+    }
+
     @Test void testNemoCanGoDownAndUp() {
         nemo.runCommands("du");
         assertEquals(0, nemo.depth());
@@ -98,9 +115,8 @@ public class Tests  {
         assertEquals(new SurfaceNavigator(), nemo.diveNavigator());
     }
 
-    @Test void testNemoCanGoToUnshootableLevelAndGoUpAndRemainThere() {
+    @Test void testNemoCanGoToUnshootableLevelAndGoUp() {
         nemo.runCommands("ddddu");
-        assertEquals(3, nemo.depth());
         assertEquals(new UnshootableLevelNavigator(3), nemo.diveNavigator());
     }
 

@@ -20,11 +20,11 @@ public class Position {
     }
 
     private int getX() {
-        return x;
+        return this.x;
     }
 
     private int getY() {
-        return y;
+        return this.y;
     }
 
     public int hashCode() {
