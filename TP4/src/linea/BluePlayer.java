@@ -10,11 +10,6 @@ public class BluePlayer implements Player{
     }
 
     @Override
-    public void playAt(Board board, int column) {
-        board.playBlueAt(column);
-    }
-
-    @Override
     public char getPlayerColor() {
         return this.color;
     }

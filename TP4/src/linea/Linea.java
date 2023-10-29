@@ -1,5 +1,7 @@
 package linea;
 
+import java.util.stream.IntStream;
+
 public class Linea implements Board {
 
     private static final char UNMARKED = ' ';
@@ -29,11 +31,12 @@ public class Linea implements Board {
         this.board = new char[rows][cols];
 
 
-        for (int i = 0; i < this.BOARD_HEIGHT; i++) {
-            for (int j = 0; j < this.BOARD_WIDTH; j++) {
-                this.board[i][j] = UNMARKED;
-            }
-        }
+        IntStream.range(0, BOARD_HEIGHT)
+                .forEach(i ->
+                        IntStream.range(0, BOARD_WIDTH)
+                                .forEach(j ->
+                                        board[i][j] = UNMARKED));
+
 
     }
 
@@ -63,13 +66,10 @@ public class Linea implements Board {
 
     private int checkRowForColumn(int column) {
 
-        for (int row = this.BOARD_HEIGHT - 1; row >= 0; row--) {
-            if (this.board[row][column] == UNMARKED) {
-                return row;
-            }
-        }
-
-        throw new RuntimeException(columnIsFullError);
+        return IntStream.rangeClosed(0, this.BOARD_HEIGHT - 1)
+                .filter(row -> this.board[row][column] == UNMARKED)
+                .reduce((first, second) -> second)
+                .orElseThrow(() -> new RuntimeException(columnIsFullError));
     }
 
 
@@ -78,28 +78,25 @@ public class Linea implements Board {
 
         StringBuilder board = new StringBuilder();
 
-        for (int i = 0; i < this.BOARD_HEIGHT; i++) {
-            board.append("|");
-            for (int j = 0; j < this.BOARD_WIDTH; j++) {
-                board.append(this.board[i][j]);
-            }
-            board.append("|\n");
-        }
+        IntStream.range(0, BOARD_HEIGHT)
+                .forEach(i -> {
+                    board.append("|");
+                    IntStream.range(0, BOARD_WIDTH)
+                            .forEach(j -> board.append(this.board[i][j]));
+                    board.append("|\n");
+                });
 
         return board.toString();
+
+
 
     }
 
     @Override
     public boolean isFull() {
-        for (int col = 0; col < BOARD_WIDTH; col++) {
-            if (board[0][col] == UNMARKED) {
-                return false;
-            }
-        }
+        return IntStream.range(0, BOARD_WIDTH)
+                .noneMatch(col -> board[0][col] == UNMARKED);
 
-
-        return true;
 
     }
 
