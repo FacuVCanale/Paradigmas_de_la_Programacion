@@ -1,12 +1,14 @@
 package linea;
 
-public class Linea {
+public class Linea implements Board {
 
     private static final char UNMARKED = ' ';
 
     public static final String columnIsFullError = "Column is full";
-    private static final char PLAYER_BLUE = 'B';
-    private static final char PLAYER_RED = 'R';
+
+    private final BluePlayer BluePlayer;
+    private final RedPlayer RedPlayer;
+    private final TypeOfGame typeOfGame;
 
     private char[][] board;
     private int BOARD_HEIGHT;
@@ -16,6 +18,13 @@ public class Linea {
 
         this.BOARD_HEIGHT = rows;
         this.BOARD_WIDTH = cols;
+        this.typeOfGame = TypeOfGame.getTypeOfGame(typeOfGame);
+
+
+        this.BluePlayer = new BluePlayer();
+
+        this.RedPlayer = new RedPlayer();
+
 
         this.board = new char[rows][cols];
 
@@ -28,6 +37,43 @@ public class Linea {
 
     }
 
+
+    @Override
+    public void playBlueAt(int column) {
+
+        placePiece(column, BluePlayer.getPlayerColor());
+
+
+    }
+
+    @Override
+    public void playRedAt(int column) {
+       placePiece(column, RedPlayer.getPlayerColor());
+
+    }
+
+
+    public void placePiece(int column, char player) {
+
+        int row = checkRowForColumn(column);
+
+        this.board[row][column] = player;
+
+    }
+
+    private int checkRowForColumn(int column) {
+
+        for (int row = this.BOARD_HEIGHT - 1; row >= 0; row--) {
+            if (this.board[row][column] == UNMARKED) {
+                return row;
+            }
+        }
+
+        throw new RuntimeException(columnIsFullError);
+    }
+
+
+    @Override
     public String showBoard() {
 
         StringBuilder board = new StringBuilder();
@@ -44,89 +90,39 @@ public class Linea {
 
     }
 
+    @Override
+    public boolean isFull() {
+        for (int col = 0; col < BOARD_WIDTH; col++) {
+            if (board[0][col] == UNMARKED) {
+                return false;
+            }
+        }
 
+
+        return true;
+
+    }
+
+    @Override
     public boolean finished() {
-        return fourInARow();
-    }
 
-    public void playBlueAt(int column) {
-
-        int row = checkRowForColumn(column);
-
-        this.board[row][column] = PLAYER_BLUE;
-
+        return isFull() || typeOfGame.validateWin(this);
 
     }
 
-
-    public void playRedAt(int column) {
-        int row = checkRowForColumn(column);
-
-        this.board[row][column] = PLAYER_RED;
-
+    @Override
+    public int getBoardHeight() {
+        return this.BOARD_HEIGHT;
     }
 
-    private int checkRowForColumn(int column) {
-
-        for (int row = this.BOARD_HEIGHT - 1; row >= 0; row--) {
-            if (this.board[row][column] == UNMARKED) {
-                return row;
-            }
-        }
-
-        throw new RuntimeException(columnIsFullError);
+    @Override
+    public int getBoardWidth() {
+        return this.BOARD_WIDTH;
     }
 
-
-
-    public boolean fourInARow() {
-        return fourInAHorizontalRow() || fourInAVerticalRow() || fourInADiagonalRow();
+    @Override
+    public char getBox(int row, int col) {
+        return this.board[row][col];
     }
-
-    private boolean fourInADiagonalRow() {
-
-        for (int i = 0; i < this.BOARD_HEIGHT - 3; i++) {
-            for (int j = 0; j < this.BOARD_WIDTH - 3; j++) {
-                if (this.board[i][j] != UNMARKED && this.board[i][j] == this.board[i + 1][j + 1] && this.board[i][j] == this.board[i + 2][j + 2] && this.board[i][j] == this.board[i + 3][j + 3]) {
-                    return true;
-                }
-            }
-        }
-
-        for (int i = 0; i < this.BOARD_HEIGHT - 3; i++) {
-            for (int j = 3; j < this.BOARD_WIDTH; j++) {
-                if (this.board[i][j] != UNMARKED && this.board[i][j] == this.board[i + 1][j - 1] && this.board[i][j] == this.board[i + 2][j - 2] && this.board[i][j] == this.board[i + 3][j - 3]) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean fourInAVerticalRow() {
-        for (int i = 0; i < this.BOARD_HEIGHT - 3; i++) {
-            for (int j = 0; j < this.BOARD_WIDTH; j++) {
-                if (this.board[i][j] != UNMARKED && this.board[i][j] == this.board[i + 1][j] && this.board[i][j] == this.board[i + 2][j] && this.board[i][j] == this.board[i + 3][j]) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-
-    private boolean fourInAHorizontalRow() {
-        for (int i = 0; i < this.BOARD_HEIGHT; i++) {
-            for (int j = 0; j < this.BOARD_WIDTH - 3; j++) {
-                if (this.board[i][j] != UNMARKED && this.board[i][j] == this.board[i][j + 1] && this.board[i][j] == this.board[i][j + 2] && this.board[i][j] == this.board[i][j + 3]) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
 }
