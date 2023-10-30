@@ -2,15 +2,20 @@ package linea;
 
 import java.util.stream.IntStream;
 
-public class Linea implements Board {
+public class Linea  {
 
     private static final char UNMARKED = ' ';
 
     public static final String columnIsFullError = "Column is full";
 
-    private final BluePlayer BluePlayer;
-    private final RedPlayer RedPlayer;
+
+    private final char BluePlayer;
+
+    private final char RedPlayer;
+
     private final TypeOfGame typeOfGame;
+
+    private char currentPlayer;
 
     private char[][] board;
     private int BOARD_HEIGHT;
@@ -23,10 +28,12 @@ public class Linea implements Board {
         this.typeOfGame = TypeOfGame.getTypeOfGame(typeOfGame);
 
 
-        this.BluePlayer = new BluePlayer();
+        this.BluePlayer = '0';
 
-        this.RedPlayer = new RedPlayer();
+        this.RedPlayer = 'X';
 
+
+        this.currentPlayer = RedPlayer;
 
         this.board = new char[rows][cols];
 
@@ -41,18 +48,28 @@ public class Linea implements Board {
     }
 
 
-    @Override
+
     public void playBlueAt(int column) {
 
-        placePiece(column, BluePlayer.getPlayerColor());
+        if(currentPlayer != BluePlayer) {
+            throw new RuntimeException("Not blue player's turn!");
+        }
 
+        placePiece(column, BluePlayer);
 
+        currentPlayer = RedPlayer;
     }
 
-    @Override
-    public void playRedAt(int column) {
-       placePiece(column, RedPlayer.getPlayerColor());
 
+    public void playRedAt(int column) {
+
+        if(currentPlayer != RedPlayer) {
+            throw new RuntimeException("Not red player's turn!");
+        }
+
+       placePiece(column, RedPlayer);
+
+        currentPlayer = BluePlayer;
     }
 
 
@@ -73,7 +90,7 @@ public class Linea implements Board {
     }
 
 
-    @Override
+
     public String showBoard() {
 
         StringBuilder board = new StringBuilder();
@@ -92,7 +109,7 @@ public class Linea implements Board {
 
     }
 
-    @Override
+
     public boolean isFull() {
         return IntStream.range(0, BOARD_WIDTH)
                 .noneMatch(col -> board[0][col] == UNMARKED);
@@ -100,26 +117,30 @@ public class Linea implements Board {
 
     }
 
-    @Override
+
     public boolean finished() {
 
         return isFull() || typeOfGame.validateWin(this);
 
     }
 
-    @Override
+
     public int getBoardHeight() {
         return this.BOARD_HEIGHT;
     }
 
-    @Override
+
     public int getBoardWidth() {
         return this.BOARD_WIDTH;
     }
 
-    @Override
+
     public char getBox(int row, int col) {
         return this.board[row][col];
+    }
+
+    public char getCurrentPlayer() {
+        return this.currentPlayer;
     }
 
 }

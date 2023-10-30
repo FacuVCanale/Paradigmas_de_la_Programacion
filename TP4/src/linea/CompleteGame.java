@@ -1,10 +1,15 @@
 package linea;
 
 public class CompleteGame extends TypeOfGame {
-    @Override
-    boolean validateWin(Board board) {
 
-        return checkHorizontalWin(board) || checkVerticalWin(board) || checkDiagonalWin(board);
+    public CompleteGame(){
+        this.name = 'C';
+    }
+
+    @Override
+    boolean validateWin(Linea board) {
+
+        return HorizontalAndVerticalGame.checkHorizontalWin(board) || HorizontalAndVerticalGame.checkVerticalWin(board) || DiagonalGame.checkDiagonalWin(board);
 
     }
 
