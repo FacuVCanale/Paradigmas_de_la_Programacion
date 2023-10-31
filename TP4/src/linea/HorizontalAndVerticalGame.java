@@ -1,20 +1,12 @@
 package linea;
 
 public class HorizontalAndVerticalGame extends TypeOfGame {
-
-
-
-
     public HorizontalAndVerticalGame() {
         this.name = 'A';
     }
 
-
-    @Override
     public boolean validateWin(Linea board) {
-
         return checkHorizontalWin(board) || checkVerticalWin(board);
-
     }
 
     protected static boolean checkVerticalWin(Linea board) {

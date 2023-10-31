@@ -6,10 +6,9 @@ public class CompleteGame extends TypeOfGame {
         this.name = 'C';
     }
 
-    @Override
     boolean validateWin(Linea board) {
-
-        return HorizontalAndVerticalGame.checkHorizontalWin(board) || HorizontalAndVerticalGame.checkVerticalWin(board) || DiagonalGame.checkDiagonalWin(board);
+        //NO SE SI ES MEJOR NEW O USAR EL STATIC.
+        return new HorizontalAndVerticalGame().validateWin(board) || new DiagonalGame().validateWin(board);
 
     }
 

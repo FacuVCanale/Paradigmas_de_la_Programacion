@@ -6,27 +6,21 @@ public class Game {
 
     public static void main( String[] args) throws Exception {
 
-        System.out.println( "Dimensiones?");
+        System.out.println( "Dimensions?");
 
-        Linea game = new Linea( prompt( "Base? " ), prompt( "Altura? " ), 'C' );
-
-
+        Linea game = new Linea( prompt( "Base? " ), prompt( "Height? " ), 'C' );
 
         System.out.println( game.showBoard() );
 
-
-
         while ( !game.finished() ) {
 
-            game.playRedAt( prompt( "Negras? " ) );
+            game.playRedAt( prompt( "Red? " ) );
 
             System.out.println( game.showBoard() );
 
-
-
             if ( !game.finished() ) {
 
-                game.playBlueAt( prompt( "Blancas? " ) );
+                game.playBlueAt( prompt( "Blue? " ) );
 
                 System.out.println( game.showBoard() );
 
