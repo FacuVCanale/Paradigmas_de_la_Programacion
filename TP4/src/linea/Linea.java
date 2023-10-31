@@ -46,10 +46,6 @@ public class Linea  {
 
     public Linea playBlueAt(int column) {
 
-        if(currentPlayer != BluePlayer) {
-            throw new RuntimeException("Not blue player's turn!");
-        }
-
         placePiece(column, BluePlayer);
 
         currentPlayer = RedPlayer;
@@ -59,10 +55,6 @@ public class Linea  {
 
 
     public Linea playRedAt(int column) {
-
-        if(currentPlayer != RedPlayer) {
-            throw new RuntimeException("Not red player's turn!");
-        }
 
        placePiece(column, RedPlayer);
 
@@ -74,9 +66,15 @@ public class Linea  {
 
     public void placePiece(int column, char player) {
 
+        if(currentPlayer != player) {
+            throw new RuntimeException("Not blue player's turn!");
+        }
+
         int row = checkRowForColumn(column);
 
         this.board[row][column] = player;
+
+        currentPlayer = RedPlayer;
 
     }
 
@@ -108,6 +106,30 @@ public class Linea  {
 
     }
 
+
+    // hacer metodo oregutnar en el que nos evitamos ahcer una matriz preseteada con valores anecdoticos  de la matriz que noi tiene fuchas.
+    // el metodo preguntar podria hacer que pregunte si hay una ficha roja o azul, si esta vacio, etc
+    // el tablero es una lista de columnas, y columnas es una lista de fichas. columnas no son un objeto en si
+    // Preguntar devuelve nada, X o O
+
+    // Aplicar Metodo Eli (recortar tablero 4x2 + 1 X 4x2 + 1)
+
+
+    // juego es una lista de n listas vacias. El test nos va a empujar a hacer algo asi.
+    // Tenemos un modelo de hacer el juego, y a la hora de verlo, el show lo proyecta distinto.
+    //
+
+    // preguntar devuelve nada afuera de los bordes. esto facilita muchisimo preguntar las diagonales,
+    // y de hecho solo hay que chequearlo desde la ultima ficha puesta, y no todas
+
+
+
+    //Crear clase quw maneje el juego, si termino, etc.
+
+
+   // private Linea changeTurn() {
+      //  currentPlayer = currentPlayer.
+    //}
 
     public boolean isFull() {
         return IntStream.range(0, BOARD_WIDTH)
