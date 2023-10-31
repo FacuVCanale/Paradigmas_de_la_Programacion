@@ -70,7 +70,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not red player's turn!",
+        assertThrowsLike("Not this player's turn!",
                             () -> new Linea(4, 4, 'A')
                                     .playRedAt(0)
                                     .playRedAt(0));
@@ -90,13 +90,13 @@ public class LineaTests {
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
-        assertThrowsLike("Not blue player's turn!",
+        assertThrowsLike("Not this player's turn!",
                             () -> new Linea(4, 4, 'A')
                                     .playBlueAt(0));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not blue player's turn!",
+        assertThrowsLike("Not this player's turn!",
                             () -> new Linea(4, 4, 'A')
                                     .playRedAt(0)
                                     .playBlueAt(0)

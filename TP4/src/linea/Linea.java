@@ -1,5 +1,6 @@
 package linea;
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class Linea  {
@@ -17,11 +18,10 @@ public class Linea  {
 
     private char currentPlayer = RedPlayer;
 
-    private char[][] board;
+    private ArrayList<ArrayList<Character>> board = new ArrayList<>();
     //PARA MI, LA FORMA DE SOLUCIONAR LOS PROBLEMAS DE BOARD SEA CREANDO CLASES ROW Y COL,
     // O DIRECTAMENTE BOARD, COSA DE QUE SE MANEJE A SÍ MISMO Y SEPA MEJOR SUS COSAS.
 
-    
     private int BOARD_HEIGHT;
     private int BOARD_WIDTH;
 
@@ -31,15 +31,8 @@ public class Linea  {
         this.BOARD_WIDTH = cols;
         this.typeOfGame = TypeOfGame.getTypeOfGame(typeOfGame);
 
-
-        this.board = new char[rows][cols];
-
-
-        IntStream.range(0, BOARD_HEIGHT)
-                .forEach(i ->
-                        IntStream.range(0, BOARD_WIDTH)
-                                .forEach(j ->
-                                        board[i][j] = UNMARKED));
+        IntStream.range(0, BOARD_WIDTH)
+                .forEach(i -> board.add(new ArrayList<>()));
     }
 
 
@@ -66,23 +59,22 @@ public class Linea  {
 
     public void placePiece(int column, char player) {
 
-        if(currentPlayer != player) {
-            throw new RuntimeException("Not blue player's turn!");
+        if (finished()) {
+            throw new RuntimeException("Game is finished!");
         }
 
-        int row = checkRowForColumn(column);
+        if(currentPlayer != player) {
+            throw new RuntimeException("Not this player's turn!");
+        }
 
-        this.board[row][column] = player;
+        if (this.board.get(column).size() == this.BOARD_HEIGHT) {
+            throw new RuntimeException(columnIsFullError);
+        }
+
+        this.board.get(column).add(player);
 
         currentPlayer = RedPlayer;
 
-    }
-
-    private int checkRowForColumn(int column) {
-        return IntStream.rangeClosed(0, this.BOARD_HEIGHT - 1)
-                .filter(row -> this.board[row][column] == UNMARKED)
-                .reduce((first, second) -> second)
-                .orElseThrow(() -> new RuntimeException(columnIsFullError));
     }
 
     public String showBoard() {
@@ -93,7 +85,7 @@ public class Linea  {
                 .forEach(i -> {
                     decoratedBoard.append("|");
                     IntStream.range(0, BOARD_WIDTH)
-                            .forEach(j -> decoratedBoard.append(this.board[i][j]));
+                            .forEach(j -> decoratedBoard.append(getBox(i, j)));
                     decoratedBoard.append("|\n");
                 });
 
@@ -133,14 +125,13 @@ public class Linea  {
 
     public boolean isFull() {
         return IntStream.range(0, BOARD_WIDTH)
-                .noneMatch(col -> board[0][col] == UNMARKED);
+                .noneMatch(col -> getBox(0, col) == UNMARKED);
     }
 
 
     public boolean finished() {
         return isFull() || typeOfGame.validateWin(this);
     }
-
 
     public int getBoardHeight() {
         return this.BOARD_HEIGHT;
@@ -151,13 +142,16 @@ public class Linea  {
         return this.BOARD_WIDTH;
     }
 
-
-    public char getBox(int row, int col) {
-        return this.board[row][col];
-    }
-
     public char getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    public char getBox(int row, int col) {
+        try {
+            return this.board.get(col).get(BOARD_HEIGHT - 1 - row);
+        } catch (IndexOutOfBoundsException e) {
+            return UNMARKED;
+        }
     }
 
 }
