@@ -117,6 +117,10 @@ public class LineaTests {
                     .playRedAt(0).showBoard());
     }
 
+
+
+
+
     @Test void testPlayerCanNotPlaceOutsideColumns() {
         assertThrowsLike("Column out of bounds!",
                 () -> new Linea(4, 4, 'A')

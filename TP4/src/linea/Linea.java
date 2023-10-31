@@ -58,18 +58,24 @@ public class Linea  {
 
 
     public void placePiece(int column, char player) {
-
+        //sacar
         if (finished()) {
             throw new RuntimeException("Game is finished!");
         }
-
+//sacasr if de finished creando clase nueva que maneje el jeugo y los otros de abajo no se puede sacar
         if(currentPlayer != player) {
             throw new RuntimeException("Not this player's turn!");
+        }
+
+        if (column < 0 || column >= this.BOARD_WIDTH) {
+            throw new RuntimeException("Column out of bounds!");
         }
 
         if (this.board.get(column).size() == this.BOARD_HEIGHT) {
             throw new RuntimeException(columnIsFullError);
         }
+
+
 
         this.board.get(column).add(player);
 
