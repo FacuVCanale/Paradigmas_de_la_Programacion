@@ -18,7 +18,7 @@ public class LineaTests {
                         |    |
                         ------
                         """,
-                new Linea(4,4, 'A').showBoard());
+                basicGameModeA().showBoard());
     }
 
     @Test void testLineaCanAdjustRowSize() {
@@ -49,8 +49,7 @@ public class LineaTests {
                         |X   |
                         ------
                         """,
-                new Linea(4,4, 'A')
-                        .playRedAt(0).showBoard());
+                basicGameModeA().playRedAt(0).showBoard());
     }
 
     @Test void testLineaCanPlayRedAtDifferentColumn() {
@@ -61,19 +60,16 @@ public class LineaTests {
                         | X  |
                         ------
                         """,
-                new Linea(4,4, 'A')
-                        .playRedAt(1).showBoard());
+                basicGameModeA().playRedAt(1).showBoard());
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(new Linea(4,4, 'A').playRedAt(0).finished());
+        assertFalse(basicGameModeA().playRedAt(0).finished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
         assertThrowsLike("Not this player's turn!",
-                            () -> new Linea(4, 4, 'A')
-                                    .playRedAt(0)
-                                    .playRedAt(0));
+                            () -> basicGameModeA().playRedAt(0).playRedAt(0));
     }
 
     @Test void testLineaCanPlayBlueAfterRed() {
@@ -84,23 +80,22 @@ public class LineaTests {
                         |X   |
                         ------
                         """,
-                new Linea(4,4, 'A')
-                    .playRedAt(0)
+                basicGameModeA().playRedAt(0)
                     .playBlueAt(0).showBoard());
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
         assertThrowsLike("Not this player's turn!",
-                            () -> new Linea(4, 4, 'A')
-                                    .playBlueAt(0));
+                            () -> basicGameModeA().playBlueAt(0));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
         assertThrowsLike("Not this player's turn!",
-                            () -> new Linea(4, 4, 'A')
+                            () -> basicGameModeA()
                                     .playRedAt(0)
                                     .playBlueAt(0)
                                     .playBlueAt(0));
+
     }
 
     @Test void testLineaGameRedCanPlayAfterBlue() {
@@ -111,7 +106,7 @@ public class LineaTests {
                         |X   |
                         ------
                         """,
-                new Linea(4, 4, 'A')
+                basicGameModeA()
                     .playRedAt(0)
                     .playBlueAt(0)
                     .playRedAt(0).showBoard());
@@ -153,7 +148,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameCanFinishAfterAHorizontalWin() {
-        Linea game = gameWithHorizontalRedWin(4,4, 'A');
+        Linea game = gameWithHorizontalRedWin('A');
         assertEquals("""
                         |    |
                         |    |
@@ -194,7 +189,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameCanFinishAfterAVerticalWin() {
-        Linea game = gameWithVerticalRedWin(4,4, 'A');
+        Linea game = gameWithVerticalRedWin('A');
         assertEquals("""
                         |X   |
                         |X0  |
@@ -227,7 +222,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameCanFinishInModeBAfterADiagonalWin() {
-        Linea game = gameWithDiagonalRedWin(4,4, 'B');
+        Linea game = gameWithDiagonalRedWin('B');
         assertEquals("""
                         |   X|
                         |  X0|
@@ -264,27 +259,31 @@ public class LineaTests {
     }
 
     @Test void testLineaGameDoesNotFinishInModeAWithADiagonalWin() {
-        assertFalse(gameWithDiagonalRedWin(4,4, 'A').finished());
+        assertFalse(gameWithDiagonalRedWin('A').finished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAHorizontalWin() {
-        assertFalse(gameWithHorizontalRedWin(4,4, 'B').finished());
+        assertFalse(gameWithHorizontalRedWin('B').finished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAVerticalWin() {
-        assertFalse(gameWithVerticalRedWin(4,4, 'B').finished());
+        assertFalse(gameWithVerticalRedWin('B').finished());
     }
 
     @Test void testLineaPlayerCanWinHorizontallyInModeC() {
-        assertTrue(gameWithHorizontalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithHorizontalRedWin('C').finished());
     }
 
     @Test void testLineaPlayerCanWinVerticallyInModeC() {
-        assertTrue(gameWithVerticalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithVerticalRedWin('C').finished());
     }
 
     @Test void testLineaPlayerCanWinDiagonallyInModeC() {
-        assertTrue(gameWithDiagonalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithDiagonalRedWin('C').finished());
+    }
+
+    private Linea basicGameModeA() {
+        return new Linea(4, 4, 'A');
     }
 
     private void assertThrowsLike(String message, Executable executable) {
@@ -292,8 +291,8 @@ public class LineaTests {
                 assertThrows(RuntimeException.class, executable).getMessage());
     }
 
-    private Linea gameWithHorizontalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
+    private Linea gameWithHorizontalRedWin(char mode) {
+        return new Linea(4, 4, mode)
                 .playRedAt(0)
                 .playBlueAt(0)
                 .playRedAt(1)
@@ -303,8 +302,8 @@ public class LineaTests {
                 .playRedAt(3);
     }
 
-    private Linea gameWithVerticalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
+    private Linea gameWithVerticalRedWin(char mode) {
+        return new Linea(4, 4, mode)
                 .playRedAt(0)
                 .playBlueAt(1)
                 .playRedAt(0)
@@ -314,8 +313,8 @@ public class LineaTests {
                 .playRedAt(0);
     }
 
-    private Linea gameWithDiagonalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
+    private Linea gameWithDiagonalRedWin(char mode) {
+        return new Linea(4, 4, mode)
                 .playRedAt(0)
                 .playBlueAt(1)
                 .playRedAt(1)

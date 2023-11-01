@@ -6,13 +6,6 @@ import static org.junit.Assert.*;
 
 public class LineaTest {
 
-
-
-
-
-
-
-
     @Test
     public void testInitialBoardEmpty() {
         Linea linea = new Linea(3, 4, 'A');
