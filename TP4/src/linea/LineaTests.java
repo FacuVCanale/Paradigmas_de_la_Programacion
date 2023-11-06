@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LineaTests {
     @Test void testLineaIsNotFinished() {
-        assertFalse(new Linea(4,4, 'A').finished());
+        assertFalse(basicGameModeA().finished());
     }
 
     @Test void testLineaCanShowBoard() {
@@ -68,7 +68,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not this player's turn!",
+        assertThrowsLike("Not red player's turn!",
                             () -> basicGameModeA().playRedAt(0).playRedAt(0));
     }
 
@@ -85,12 +85,12 @@ public class LineaTests {
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
-        assertThrowsLike("Not this player's turn!",
+        assertThrowsLike("Not blue player's turn!",
                             () -> basicGameModeA().playBlueAt(0));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not this player's turn!",
+        assertThrowsLike("Not blue player's turn!",
                             () -> basicGameModeA()
                                     .playRedAt(0)
                                     .playBlueAt(0)
@@ -118,7 +118,7 @@ public class LineaTests {
 
     @Test void testPlayerCanNotPlaceOutsideColumns() {
         assertThrowsLike("Column out of bounds!",
-                () -> new Linea(4, 4, 'A')
+                () -> basicGameModeA()
                         .playRedAt(4));
     }
 
@@ -161,7 +161,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameCanFinishInAnyRow() {
-        Linea game = new Linea(4, 4, 'A');
+        Linea game = basicGameModeA();
         game.playRedAt(0)
                 .playBlueAt(0)
                 .playRedAt(1)
@@ -202,7 +202,7 @@ public class LineaTests {
     }
 
     @Test void TestLineaPlayerCanWinInAnyColumn() {
-        Linea game = new Linea(4, 4, 'A');
+        Linea game = basicGameModeA();
         game.playRedAt(2)
                 .playBlueAt(1)
                 .playRedAt(2)

@@ -9,18 +9,11 @@ public class Linea  {
 
     public static final String columnIsFullError = "Column is full!";
 
-
-    private final char BluePlayer = '0';
-
-    private final char RedPlayer = 'X';
-
     private final TypeOfGame typeOfGame;
 
-    private char currentPlayer = RedPlayer;
+    private TurnHandler turnHandler = new RedTurnHandler();
 
     private ArrayList<ArrayList<Character>> board = new ArrayList<>();
-    //PARA MI, LA FORMA DE SOLUCIONAR LOS PROBLEMAS DE BOARD SEA CREANDO CLASES ROW Y COL,
-    // O DIRECTAMENTE BOARD, COSA DE QUE SE MANEJE A SÍ MISMO Y SEPA MEJOR SUS COSAS.
 
     private int BOARD_HEIGHT;
     private int BOARD_WIDTH;
@@ -35,36 +28,20 @@ public class Linea  {
                 .forEach(i -> board.add(new ArrayList<>()));
     }
 
-
-
     public Linea playBlueAt(int column) {
-
-        placePiece(column, BluePlayer);
-
-        currentPlayer = RedPlayer;
-
+        turnHandler = turnHandler.playBlueAt(this, column);
         return this;
     }
-
 
     public Linea playRedAt(int column) {
-
-       placePiece(column, RedPlayer);
-
-        currentPlayer = BluePlayer;
-
+        turnHandler = turnHandler.playRedAt(this, column);
         return this;
     }
 
-
-    public void placePiece(int column, char player) {
+    public void placePiece(int column, char checker) {
         //sacar
         if (finished()) {
             throw new RuntimeException("Game is finished!");
-        }
-//sacasr if de finished creando clase nueva que maneje el jeugo y los otros de abajo no se puede sacar
-        if(currentPlayer != player) {
-            throw new RuntimeException("Not this player's turn!");
         }
 
         if (column < 0 || column >= this.BOARD_WIDTH) {
@@ -75,12 +52,7 @@ public class Linea  {
             throw new RuntimeException(columnIsFullError);
         }
 
-
-
-        this.board.get(column).add(player);
-
-        currentPlayer = RedPlayer;
-
+        this.board.get(column).add(checker);
     }
 
     public String showBoard() {
@@ -148,8 +120,8 @@ public class Linea  {
         return this.BOARD_WIDTH;
     }
 
-    public char getCurrentPlayer() {
-        return this.currentPlayer;
+    public TurnHandler getTurnHandler() {
+        return this.turnHandler;
     }
 
     public char getBox(int row, int col) {

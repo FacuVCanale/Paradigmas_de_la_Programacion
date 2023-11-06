@@ -21,7 +21,7 @@ public class LineaTest {
     public void testInitialPlayerRed() {
         Linea linea = new Linea(3, 4, 'A');
 
-        assertEquals('X', linea.getCurrentPlayer());
+        assertEquals('X', linea.getTurnHandler());
     }
     
     @Test
