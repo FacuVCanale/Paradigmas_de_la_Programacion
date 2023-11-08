@@ -11,7 +11,7 @@ public class Linea  {
 
     private final TypeOfGame typeOfGame;
 
-    private TurnHandler turnHandler = new RedTurnHandler();
+    private GameState gameState = new PlayingRed();
 
     private ArrayList<ArrayList<Character>> board = new ArrayList<>();
 
@@ -29,12 +29,12 @@ public class Linea  {
     }
 
     public Linea playBlueAt(int column) {
-        turnHandler = turnHandler.playBlueAt(this, column);
+        gameState = gameState.playBlueAt(this, column);
         return this;
     }
 
     public Linea playRedAt(int column) {
-        turnHandler = turnHandler.playRedAt(this, column);
+        gameState = gameState.playRedAt(this, column);
         return this;
     }
 
@@ -120,8 +120,8 @@ public class Linea  {
         return this.BOARD_WIDTH;
     }
 
-    public TurnHandler getTurnHandler() {
-        return this.turnHandler;
+    public GameState getTurnHandler() {
+        return this.gameState;
     }
 
     public char getBox(int row, int col) {
@@ -131,5 +131,79 @@ public class Linea  {
             return UNMARKED;
         }
     }
+
+    protected boolean checkVerticalWin() {
+
+        for (int col = 0; col < BOARD_WIDTH; col++) {
+            for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
+
+                char symbol = this.getBox(row, col);
+
+                if (symbol != ' ' &&
+                        symbol == this.getBox(row + 1, col) &&
+                        symbol == this.getBox(row + 2, col) &&
+                        symbol == this.getBox(row + 3, col)) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected boolean checkHorizontalWin() {
+
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+            for (int col = 0; col < BOARD_WIDTH  - 3; col++) {
+
+                char symbol = this.getBox(row, col);
+
+                if (symbol != ' ' &&
+                        symbol == this.getBox(row, col + 1) &&
+                        symbol == this.getBox(row, col + 2) &&
+                        symbol == this.getBox(row, col + 3)) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected boolean checkDiagonalWin() {
+
+        for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
+            for (int col = 0; col < BOARD_WIDTH - 3; col++) {
+                if (checkDiagonal(row, col, 1)) {
+                    return true;
+                }
+            }
+        }
+
+        for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
+            for (int col = 3; col < BOARD_WIDTH; col++) {
+                if (checkDiagonal(row, col, -1)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    private boolean checkDiagonal(int startRow, int startCol, int step) {
+
+        char symbol = this.getBox(startRow, startCol);
+
+        return symbol != ' '
+                && symbol == this.getBox(startRow + 1, startCol + step)
+                && symbol == this.getBox(startRow + 2, startCol + 2*step)
+                && symbol == this.getBox(startRow + 3, startCol + 3*step);
+
+    }
+
 
 }

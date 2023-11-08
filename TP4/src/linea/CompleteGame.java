@@ -8,7 +8,7 @@ public class CompleteGame extends TypeOfGame {
 
     boolean validateWin(Linea board) {
         //NO SE SI ES MEJOR NEW O USAR EL STATIC.
-        return new HorizontalAndVerticalGame().validateWin(board) || new DiagonalGame().validateWin(board);
+        return  board.checkDiagonalWin() || board.checkHorizontalWin() || board.checkVerticalWin();
 
     }
 
