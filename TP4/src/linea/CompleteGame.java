@@ -6,9 +6,8 @@ public class CompleteGame extends TypeOfGame {
         this.name = 'C';
     }
 
-    boolean validateWin(Linea board) {
-        //NO SE SI ES MEJOR NEW O USAR EL STATIC.
-        return  board.checkDiagonalWin() || board.checkHorizontalWin() || board.checkVerticalWin();
+    boolean validateWin(Linea board, int column) {
+        return  board.checkDiagonalWin(column) || board.checkHorizontalWin(column) || board.checkVerticalWin(column);
 
     }
 

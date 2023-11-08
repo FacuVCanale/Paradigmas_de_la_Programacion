@@ -17,6 +17,7 @@ public class LineaTests {
                         |    |
                         |    |
                         ------
+                        Red's turn                      
                         """,
                 basicGameModeA().showBoard());
     }
@@ -26,6 +27,7 @@ public class LineaTests {
                         |    |
                         |    |
                         ------
+                        Red's turn
                         """,
                 new Linea(2,4, 'A').showBoard());
     }
@@ -37,6 +39,7 @@ public class LineaTests {
                         |  |
                         |  |
                         ----
+                        Red's turn
                         """,
                 new Linea(4,2, 'A').showBoard());
     }
@@ -48,6 +51,7 @@ public class LineaTests {
                         |    |
                         |X   |
                         ------
+                        Blue's turn
                         """,
                 basicGameModeA().playRedAt(0).showBoard());
     }
@@ -59,6 +63,7 @@ public class LineaTests {
                         |    |
                         | X  |
                         ------
+                        Blue's turn
                         """,
                 basicGameModeA().playRedAt(1).showBoard());
     }
@@ -79,6 +84,7 @@ public class LineaTests {
                         |0   |
                         |X   |
                         ------
+                        Red's turn
                         """,
                 basicGameModeA().playRedAt(0)
                     .playBlueAt(0).showBoard());
@@ -105,6 +111,7 @@ public class LineaTests {
                         |0   |
                         |X   |
                         ------
+                        Blue's turn
                         """,
                 basicGameModeA()
                     .playRedAt(0)
@@ -138,7 +145,7 @@ public class LineaTests {
     }
 
     @Test void testLineaCanNotPlayAfterFinished() {
-        assertThrowsLike("Game is finished!",
+        assertThrowsLike("Game is over! It's a tie!",
                             () -> new Linea(1, 4, 'A')
                                     .playRedAt(0)
                                     .playBlueAt(1)
@@ -155,6 +162,7 @@ public class LineaTests {
                         |000 |
                         |XXXX|
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());
@@ -183,6 +191,7 @@ public class LineaTests {
                         |000X|
                         |XXX0|
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());
@@ -196,6 +205,7 @@ public class LineaTests {
                         |X0  |
                         |X0  |
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());
@@ -216,6 +226,7 @@ public class LineaTests {
                         | 0X |
                         | 0X |
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());
@@ -229,6 +240,7 @@ public class LineaTests {
                         |XX00|
                         |X00X|
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());
@@ -253,6 +265,7 @@ public class LineaTests {
                         |X0X0|
                         |X00X|
                         ------
+                        Red has won!
                         """,
                 game.showBoard());
         assertTrue(game.finished());

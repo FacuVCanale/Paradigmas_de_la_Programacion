@@ -5,8 +5,8 @@ public class HorizontalAndVerticalGame extends TypeOfGame {
         this.name = 'A';
     }
 
-    public boolean validateWin(Linea board) {
-        return board.checkHorizontalWin() || board.checkVerticalWin();
+    public boolean validateWin(Linea board, int column) {
+        return board.checkHorizontalWin(column) || board.checkVerticalWin(column);
     }
 
 

@@ -7,9 +7,8 @@ public class DiagonalGame extends TypeOfGame {
         this.name = 'B';
     }
 
-    @Override
-    boolean validateWin(Linea board) {
-        return board.checkDiagonalWin();
+    boolean validateWin(Linea board, int column) {
+        return board.checkDiagonalWin(column);
     }
 
 

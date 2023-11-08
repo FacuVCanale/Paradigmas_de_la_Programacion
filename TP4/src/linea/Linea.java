@@ -3,7 +3,7 @@ package linea;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-public class Linea  {
+public class Linea {
 
     private static final char UNMARKED = ' ';
 
@@ -29,20 +29,16 @@ public class Linea  {
     }
 
     public Linea playBlueAt(int column) {
-        gameState = gameState.playBlueAt(this, column);
+        gameState.playBlueAt(this, column);
         return this;
     }
 
     public Linea playRedAt(int column) {
-        gameState = gameState.playRedAt(this, column);
+        gameState.playRedAt(this, column);
         return this;
     }
 
     public void placePiece(int column, char checker) {
-        //sacar
-        if (finished()) {
-            throw new RuntimeException("Game is finished!");
-        }
 
         if (column < 0 || column >= this.BOARD_WIDTH) {
             throw new RuntimeException("Column out of bounds!");
@@ -53,6 +49,18 @@ public class Linea  {
         }
 
         this.board.get(column).add(checker);
+        checkGameFinished(column);
+    }
+
+    private Linea checkGameFinished(int column) {
+        if (typeOfGame.validateWin(this, column)) {
+            gameState = gameState.win();
+        } else if (isFull()) {
+            gameState = gameState.tie();
+        } else {
+            gameState = gameState.changeTurn();
+        }
+        return this;
     }
 
     public String showBoard() {
@@ -72,34 +80,11 @@ public class Linea  {
 
         decoratedBoard.append("\n");
 
+        decoratedBoard.append(gameState.show() + "\n");
+
         return decoratedBoard.toString();
 
     }
-
-
-    // hacer metodo oregutnar en el que nos evitamos ahcer una matriz preseteada con valores anecdoticos  de la matriz que noi tiene fuchas.
-    // el metodo preguntar podria hacer que pregunte si hay una ficha roja o azul, si esta vacio, etc
-    // el tablero es una lista de columnas, y columnas es una lista de fichas. columnas no son un objeto en si
-    // Preguntar devuelve nada, X o O
-
-    // Aplicar Metodo Eli (recortar tablero 4x2 + 1 X 4x2 + 1)
-
-
-    // juego es una lista de n listas vacias. El test nos va a empujar a hacer algo asi.
-    // Tenemos un modelo de hacer el juego, y a la hora de verlo, el show lo proyecta distinto.
-    //
-
-    // preguntar devuelve nada afuera de los bordes. esto facilita muchisimo preguntar las diagonales,
-    // y de hecho solo hay que chequearlo desde la ultima ficha puesta, y no todas
-
-
-
-    //Crear clase quw maneje el juego, si termino, etc.
-
-
-   // private Linea changeTurn() {
-      //  currentPlayer = currentPlayer.
-    //}
 
     public boolean isFull() {
         return IntStream.range(0, BOARD_WIDTH)
@@ -108,20 +93,7 @@ public class Linea  {
 
 
     public boolean finished() {
-        return isFull() || typeOfGame.validateWin(this);
-    }
-
-    public int getBoardHeight() {
-        return this.BOARD_HEIGHT;
-    }
-
-
-    public int getBoardWidth() {
-        return this.BOARD_WIDTH;
-    }
-
-    public GameState getTurnHandler() {
-        return this.gameState;
+        return gameState instanceof Tie || gameState instanceof Finish;
     }
 
     public char getBox(int row, int col) {
@@ -132,78 +104,35 @@ public class Linea  {
         }
     }
 
-    protected boolean checkVerticalWin() {
+    protected boolean checkVerticalWin(int x) {
 
-        for (int col = 0; col < BOARD_WIDTH; col++) {
-            for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
+        int y = BOARD_HEIGHT - this.board.get(x).size();
 
-                char symbol = this.getBox(row, col);
+        char symbol = this.getBox(y, x);
 
-                if (symbol != ' ' &&
-                        symbol == this.getBox(row + 1, col) &&
-                        symbol == this.getBox(row + 2, col) &&
-                        symbol == this.getBox(row + 3, col)) {
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return IntStream.range(1, 4).mapToObj(row -> this.getBox(row + y, x)).allMatch(s -> s == symbol);
     }
 
-    protected boolean checkHorizontalWin() {
+    protected boolean checkHorizontalWin(int x) {
 
-        for (int row = 0; row < BOARD_HEIGHT; row++) {
-            for (int col = 0; col < BOARD_WIDTH  - 3; col++) {
+        int y = BOARD_HEIGHT - this.board.get(x).size();
 
-                char symbol = this.getBox(row, col);
+        char symbol = this.getBox(y, x);
 
-                if (symbol != ' ' &&
-                        symbol == this.getBox(row, col + 1) &&
-                        symbol == this.getBox(row, col + 2) &&
-                        symbol == this.getBox(row, col + 3)) {
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return IntStream.range(1, 4).mapToObj(col -> this.getBox(y, col + x)).allMatch(s -> s == symbol) ||
+                IntStream.range(1, 4).mapToObj(col -> this.getBox(y, x - col)).allMatch(s -> s == symbol);
     }
 
-    protected boolean checkDiagonalWin() {
+    protected boolean checkDiagonalWin(int x) {
 
-        for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
-            for (int col = 0; col < BOARD_WIDTH - 3; col++) {
-                if (checkDiagonal(row, col, 1)) {
-                    return true;
-                }
-            }
-        }
+        int y = BOARD_HEIGHT - this.board.get(x).size();
 
-        for (int row = 0; row < BOARD_HEIGHT - 3; row++) {
-            for (int col = 3; col < BOARD_WIDTH; col++) {
-                if (checkDiagonal(row, col, -1)) {
-                    return true;
-                }
-            }
-        }
+        char symbol = this.getBox(y, x);
 
-        return false;
+        return IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x + step)).allMatch(s -> s == symbol) ||
+                IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x - step)).allMatch(s -> s == symbol) ||
+                IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x + step)).allMatch(s -> s == symbol) ||
+                IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x - step)).allMatch(s -> s == symbol);
 
     }
-
-    private boolean checkDiagonal(int startRow, int startCol, int step) {
-
-        char symbol = this.getBox(startRow, startCol);
-
-        return symbol != ' '
-                && symbol == this.getBox(startRow + 1, startCol + step)
-                && symbol == this.getBox(startRow + 2, startCol + 2*step)
-                && symbol == this.getBox(startRow + 3, startCol + 3*step);
-
-    }
-
-
 }
