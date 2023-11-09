@@ -19,7 +19,7 @@ public class LineaTests {
                         ------
                         Red's turn                      
                         """,
-                basicGameModeA().showBoard());
+                basicGameModeA().show());
     }
 
     @Test void testLineaCanAdjustRowSize() {
@@ -29,7 +29,7 @@ public class LineaTests {
                         ------
                         Red's turn
                         """,
-                new Linea(2,4, 'A').showBoard());
+                new Linea(2,4, 'A').show());
     }
 
     @Test void testLineaCanAdjustColumnSize() {
@@ -41,7 +41,7 @@ public class LineaTests {
                         ----
                         Red's turn
                         """,
-                new Linea(4,2, 'A').showBoard());
+                new Linea(4,2, 'A').show());
     }
 
     @Test void testLineaCanPlayRedAt() {
@@ -53,7 +53,7 @@ public class LineaTests {
                         ------
                         Blue's turn
                         """,
-                basicGameModeA().playRedAt(0).showBoard());
+                basicGameModeA().playRedAt(0).show());
     }
 
     @Test void testLineaCanPlayRedAtDifferentColumn() {
@@ -65,7 +65,7 @@ public class LineaTests {
                         ------
                         Blue's turn
                         """,
-                basicGameModeA().playRedAt(1).showBoard());
+                basicGameModeA().playRedAt(1).show());
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
@@ -87,7 +87,7 @@ public class LineaTests {
                         Red's turn
                         """,
                 basicGameModeA().playRedAt(0)
-                    .playBlueAt(0).showBoard());
+                    .playBlueAt(0).show());
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
@@ -116,7 +116,7 @@ public class LineaTests {
                 basicGameModeA()
                     .playRedAt(0)
                     .playBlueAt(0)
-                    .playRedAt(0).showBoard());
+                    .playRedAt(0).show());
     }
 
 
@@ -164,7 +164,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
@@ -193,7 +193,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
@@ -207,7 +207,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
@@ -228,7 +228,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
@@ -242,7 +242,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
@@ -267,7 +267,7 @@ public class LineaTests {
                         ------
                         Red has won!
                         """,
-                game.showBoard());
+                game.show());
         assertTrue(game.finished());
     }
 
