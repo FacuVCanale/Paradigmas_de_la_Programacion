@@ -295,6 +295,8 @@ public class LineaTests {
         assertTrue(gameWithDiagonalRedWin('C').finished());
     }
 
+
+
     private Linea basicGameModeA() {
         return new Linea(4, 4, 'A');
     }

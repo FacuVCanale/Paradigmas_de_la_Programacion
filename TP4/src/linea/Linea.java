@@ -104,35 +104,48 @@ public class Linea {
         }
     }
 
-    protected boolean checkVerticalWin(int x) {
+    protected boolean checkVerticalWin(int xAxis) {
 
-        int y = BOARD_HEIGHT - this.board.get(x).size();
+        int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
 
-        char symbol = this.getBox(y, x);
+        char symbol = this.getBox(yAxis, xAxis);
 
-        return IntStream.range(1, 4).mapToObj(row -> this.getBox(row + y, x)).allMatch(s -> s == symbol);
+        return IntStream.range(1, 4).mapToObj(row -> this.getBox(row + yAxis, xAxis)).allMatch(s -> s == symbol);
     }
 
-    protected boolean checkHorizontalWin(int x) {
+    protected boolean checkHorizontalWin(int xAxis) {
 
-        int y = BOARD_HEIGHT - this.board.get(x).size();
+        int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
 
-        char symbol = this.getBox(y, x);
+        return checkWithStepFromCoordinate(xAxis,yAxis,1,0);
 
-        return IntStream.range(1, 4).mapToObj(col -> this.getBox(y, col + x)).allMatch(s -> s == symbol) ||
-                IntStream.range(1, 4).mapToObj(col -> this.getBox(y, x - col)).allMatch(s -> s == symbol);
+        /*return IntStream.range(1, 4).mapToObj(col -> this.getBox(yAxis, col + xAxis)).allMatch(s -> s == symbol) ||
+                IntStream.range(1, 4).mapToObj(col -> this.getBox(yAxis, xAxis - col)).allMatch(s -> s == symbol);*/
     }
 
     protected boolean checkDiagonalWin(int x) {
 
         int y = BOARD_HEIGHT - this.board.get(x).size();
 
-        char symbol = this.getBox(y, x);
+        return checkWithStepFromCoordinate(x,y,1,1) || checkWithStepFromCoordinate(x,y,-1,-1);
 
-        return IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x + step)).allMatch(s -> s == symbol) ||
+        /*return IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x + step)).allMatch(s -> s == symbol) ||
                 IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x - step)).allMatch(s -> s == symbol) ||
                 IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x + step)).allMatch(s -> s == symbol) ||
                 IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x - step)).allMatch(s -> s == symbol);
+*/
+    }
+
+    private boolean checkWithStepFromCoordinate(int xAxis, int yAxis, int stepX, int stepY){
+
+        char symbol = this.getBox(yAxis, xAxis);
+
+        return IntStream.range(0,4) //  diagonal: 1,1; horizontal; 1,0; diagonal inverso: -1,-1
+                .mapToObj(index -> IntStream.range(1,4)
+                                            .mapToObj(delta -> this.getBox(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
+                                            .allMatch(s -> s == symbol ))
+                .anyMatch(s -> s == true);
 
     }
+
 }
