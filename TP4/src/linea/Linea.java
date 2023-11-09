@@ -63,7 +63,7 @@ public class Linea {
         return this;
     }
 
-    public String showBoard() {
+    public String show() {
 
         StringBuilder decoratedBoard = new StringBuilder();
 
@@ -127,7 +127,7 @@ public class Linea {
 
         int y = BOARD_HEIGHT - this.board.get(x).size();
 
-        return checkWithStepFromCoordinate(x,y,1,1) || checkWithStepFromCoordinate(x,y,-1,-1);
+        return checkWithStepFromCoordinate(x,y,-1,1) || checkWithStepFromCoordinate(x,y,-1,-1);
 
         /*return IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x + step)).allMatch(s -> s == symbol) ||
                 IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x - step)).allMatch(s -> s == symbol) ||
@@ -141,11 +141,9 @@ public class Linea {
         char symbol = this.getBox(yAxis, xAxis);
 
         return IntStream.range(0,4) //  diagonal: 1,1; horizontal; 1,0; diagonal inverso: -1,-1
-                .mapToObj(index -> IntStream.range(1,4)
+                .mapToObj(index -> IntStream.range(0,4)
                                             .mapToObj(delta -> this.getBox(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
-                                            .allMatch(s -> s == symbol ))
-                .anyMatch(s -> s == true);
-
+                                            .allMatch(s -> s == symbol )).anyMatch(s -> ((Boolean) s));
     }
 
 }
