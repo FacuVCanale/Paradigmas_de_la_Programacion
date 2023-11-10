@@ -5,7 +5,7 @@ public class PlayingBlue extends GameState {
     public static final String notRedPlayerTurnMessage = "Not red player's turn!";
 
     public void playBlueAt(Linea game, int column) {
-        game.placePieceAt(column, GameState.BluePlayer);
+        game.placePieceAt(column, '0');
     }
 
     public void playRedAt(Linea game, int column) {

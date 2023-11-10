@@ -1,8 +1,6 @@
 package linea;
 
 public abstract class GameState {
-    public static char BluePlayer = '0';
-    public static char RedPlayer = 'X';
 
     public abstract String show();
 
