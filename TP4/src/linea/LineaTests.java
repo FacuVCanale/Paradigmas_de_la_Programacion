@@ -53,7 +53,7 @@ public class LineaTests {
                         ------
                         Blue's turn
                         """,
-                basicGameModeA().playRedAt(0).show());
+                basicGameModeA().playRedAt(1).show());
     }
 
     @Test void testLineaCanPlayRedAtDifferentColumn() {
@@ -65,11 +65,11 @@ public class LineaTests {
                         ------
                         Blue's turn
                         """,
-                basicGameModeA().playRedAt(1).show());
+                basicGameModeA().playRedAt(2).show());
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(basicGameModeA().playRedAt(0).isGameFinished());
+        assertFalse(basicGameModeA().playRedAt(1).isGameFinished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
@@ -263,7 +263,7 @@ public class LineaTests {
     @Test
     public void testGameEndsWhenFillingGapInThreeCheckerBackwardDiagonalLine() {
 
-        Linea game =  basicGameModeA();
+        Linea game =  new Linea(4, 4, 'B');
 
         game.playRedAt(0)
                 .playBlueAt(0)

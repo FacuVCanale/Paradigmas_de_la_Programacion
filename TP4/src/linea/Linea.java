@@ -32,12 +32,12 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
     }
 
     public Linea playBlueAt(int column) {
-        gameState.playBlueAt(this, column);
+        gameState.playBlueAt(this, column - 1);
         return this;
     }
 
     public Linea playRedAt(int column) {
-        gameState.playRedAt(this, column);
+        gameState.playRedAt(this, column - 1);
         return this;
     }
 
@@ -101,15 +101,15 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
 
     public char getSymbolAtPosition(int row, int col) {
 
-        int desiredRow = BOARD_HEIGHT - 1 - row;
+        int rowIndex = BOARD_HEIGHT - 1 - row;
 
         if (col >= 0 && col < BOARD_WIDTH) {
 
             ArrayList<Character> column = board.get(col);
 
-            if (desiredRow >= 0 && desiredRow < column.size()) {
+            if (rowIndex >= 0 && rowIndex < column.size()) {
 
-                return column.get(desiredRow);
+                return column.get(rowIndex);
 
             }
 
@@ -150,7 +150,8 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
         return IntStream.range(0,4)
                 .mapToObj(index -> IntStream.range(0,4)
                                             .mapToObj(delta -> this.getSymbolAtPosition(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
-                                            .allMatch(s -> s == symbol )).anyMatch(s -> ((Boolean) s));
+                                            .allMatch(s -> s == symbol ))
+                .anyMatch(s -> s);
     }
 
 
