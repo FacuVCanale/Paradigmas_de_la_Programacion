@@ -10,7 +10,7 @@ public abstract class TypeOfGame {
     public static final ArrayList<TypeOfGame> typesOfGame = new ArrayList<>(Arrays.asList(
             new HorizontalAndVerticalGame(),
             new DiagonalGame(),
-            new CompleteGame()
+            new AllDirectionsGame()
     ));
 
     public static TypeOfGame getTypeOfGame(char typeOfGame) {

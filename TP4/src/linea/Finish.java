@@ -1,29 +1,31 @@
 package linea;
 
 public class Finish extends GameState {
-    private String message;
+
+    private static final String gameIsFinishedMessage = "Game is finished!";
+    private final String message;
     public Finish(String message) {
         this.message = message;
     }
 
     public void playBlueAt(Linea game, int column) {
-        throw new RuntimeException("Game is finished!");
+        throw new RuntimeException(gameIsFinishedMessage);
     }
 
     public void playRedAt(Linea game, int column) {
-        throw new RuntimeException("Game is finished!");
+        throw new RuntimeException(gameIsFinishedMessage);
     }
 
     public GameState changeTurn() {
-        throw new RuntimeException("Game is finished!");
+        throw new RuntimeException(gameIsFinishedMessage);
     }
 
     public GameState win() {
-        throw new RuntimeException("Game is finished!");
+        throw new RuntimeException(gameIsFinishedMessage);
     }
 
     public GameState tie() {
-        throw new RuntimeException("Game is finished!");
+        throw new RuntimeException(gameIsFinishedMessage);
     }
 
     public String show() {

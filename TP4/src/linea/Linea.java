@@ -5,7 +5,10 @@ import java.util.stream.IntStream;
 
 public class Linea {
 
-    private static final char UNMARKED = ' ';
+    private static final char UNMARKED_SLOT = ' ';
+
+
+public static final String columnOutOfBoundsError = "Column out of bounds!";
 
     public static final String columnIsFullError = "Column is full!";
 
@@ -15,8 +18,8 @@ public class Linea {
 
     private ArrayList<ArrayList<Character>> board = new ArrayList<>();
 
-    private int BOARD_HEIGHT;
-    private int BOARD_WIDTH;
+    private final int BOARD_HEIGHT;
+    private final int BOARD_WIDTH;
 
     public Linea(int rows, int cols, char typeOfGame) {
 
@@ -38,10 +41,10 @@ public class Linea {
         return this;
     }
 
-    public void placePiece(int column, char checker) {
+    public void placePieceAt(int column, char checker) {
 
         if (column < 0 || column >= this.BOARD_WIDTH) {
-            throw new RuntimeException("Column out of bounds!");
+            throw new RuntimeException(columnOutOfBoundsError);
         }
 
         if (this.board.get(column).size() == this.BOARD_HEIGHT) {
@@ -49,13 +52,13 @@ public class Linea {
         }
 
         this.board.get(column).add(checker);
-        checkGameFinished(column);
+        updateGameStateAfterMove(column);
     }
 
-    private Linea checkGameFinished(int column) {
+    private Linea updateGameStateAfterMove(int column) {
         if (typeOfGame.validateWin(this, column)) {
             gameState = gameState.win();
-        } else if (isFull()) {
+        } else if (areAllColumnsFilled()) {
             gameState = gameState.tie();
         } else {
             gameState = gameState.changeTurn();
@@ -71,7 +74,7 @@ public class Linea {
                 .forEach(i -> {
                     decoratedBoard.append("|");
                     IntStream.range(0, BOARD_WIDTH)
-                            .forEach(j -> decoratedBoard.append(getBox(i, j)));
+                            .forEach(j -> decoratedBoard.append(getSymbolAtPosition(i, j)));
                     decoratedBoard.append("|\n");
                 });
 
@@ -86,63 +89,67 @@ public class Linea {
 
     }
 
-    public boolean isFull() {
+    public boolean areAllColumnsFilled() {
         return IntStream.range(0, BOARD_WIDTH)
-                .noneMatch(col -> getBox(0, col) == UNMARKED);
+                .noneMatch(col -> getSymbolAtPosition(0, col) == UNMARKED_SLOT);
     }
 
 
-    public boolean finished() {
+    public boolean isGameFinished() {
         return gameState instanceof Tie || gameState instanceof Finish;
     }
 
-    public char getBox(int row, int col) {
-        try {
-            return this.board.get(col).get(BOARD_HEIGHT - 1 - row);
-        } catch (IndexOutOfBoundsException e) {
-            return UNMARKED;
+    public char getSymbolAtPosition(int row, int col) {
+
+        int desiredRow = BOARD_HEIGHT - 1 - row;
+
+        if (col >= 0 && col < BOARD_WIDTH) {
+
+            ArrayList<Character> column = board.get(col);
+
+            if (desiredRow >= 0 && desiredRow < column.size()) {
+
+                return column.get(desiredRow);
+
+            }
+
         }
+
+        return UNMARKED_SLOT;
+
     }
 
     protected boolean checkVerticalWin(int xAxis) {
 
         int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
 
-        char symbol = this.getBox(yAxis, xAxis);
+        char symbol = this.getSymbolAtPosition(yAxis, xAxis);
 
-        return IntStream.range(1, 4).mapToObj(row -> this.getBox(row + yAxis, xAxis)).allMatch(s -> s == symbol);
+        return IntStream.range(1, 4).mapToObj(row -> this.getSymbolAtPosition(row + yAxis, xAxis)).allMatch(s -> s == symbol);
     }
 
     protected boolean checkHorizontalWin(int xAxis) {
 
         int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
 
-        return checkWithStepFromCoordinate(xAxis,yAxis,1,0);
+        return checkWinningLineFromCoord(xAxis,yAxis,1,0);
 
-        /*return IntStream.range(1, 4).mapToObj(col -> this.getBox(yAxis, col + xAxis)).allMatch(s -> s == symbol) ||
-                IntStream.range(1, 4).mapToObj(col -> this.getBox(yAxis, xAxis - col)).allMatch(s -> s == symbol);*/
     }
 
     protected boolean checkDiagonalWin(int x) {
 
         int y = BOARD_HEIGHT - this.board.get(x).size();
 
-        return checkWithStepFromCoordinate(x,y,-1,1) || checkWithStepFromCoordinate(x,y,-1,-1);
-
-        /*return IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x + step)).allMatch(s -> s == symbol) ||
-                IntStream.range(1, 4).mapToObj(step -> this.getBox(y + step, x - step)).allMatch(s -> s == symbol) ||
-                IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x + step)).allMatch(s -> s == symbol) ||
-                IntStream.range(1, 4).mapToObj(step -> this.getBox(y - step, x - step)).allMatch(s -> s == symbol);
-*/
+        return  checkWinningLineFromCoord(x,y,-1,-1); // anda mal checkWinningLineFromCoord(x,y,-1,1) (diagonal inversa)
     }
 
-    private boolean checkWithStepFromCoordinate(int xAxis, int yAxis, int stepX, int stepY){
+    private boolean checkWinningLineFromCoord(int xAxis, int yAxis, int stepX, int stepY){
 
-        char symbol = this.getBox(yAxis, xAxis);
+        char symbol = this.getSymbolAtPosition(yAxis, xAxis);
 
-        return IntStream.range(0,4) //  diagonal: 1,1; horizontal; 1,0; diagonal inverso: -1,-1
+        return IntStream.range(0,4)
                 .mapToObj(index -> IntStream.range(0,4)
-                                            .mapToObj(delta -> this.getBox(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
+                                            .mapToObj(delta -> this.getSymbolAtPosition(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
                                             .allMatch(s -> s == symbol )).anyMatch(s -> ((Boolean) s));
     }
 

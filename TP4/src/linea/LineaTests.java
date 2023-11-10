@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LineaTests {
     @Test void testLineaIsNotFinished() {
-        assertFalse(basicGameModeA().finished());
+        assertFalse(basicGameModeA().isGameFinished());
     }
 
     @Test void testLineaCanShowBoard() {
@@ -69,7 +69,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(basicGameModeA().playRedAt(0).finished());
+        assertFalse(basicGameModeA().playRedAt(0).isGameFinished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
@@ -141,7 +141,7 @@ public class LineaTests {
                         .playBlueAt(1)
                         .playRedAt(2)
                         .playBlueAt(3)
-                        .finished());
+                        .isGameFinished());
     }
 
     @Test void testLineaCanNotPlayAfterFinished() {
@@ -165,7 +165,7 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishInAnyRow() {
@@ -194,7 +194,7 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishAfterAVerticalWin() {
@@ -208,7 +208,7 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void TestLineaPlayerCanWinInAnyColumn() {
@@ -229,8 +229,72 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
+
+
+    @Test void testGameEndsWhenFillingGapInThreeCheckerHorizontalLine() {
+        Linea game = basicGameModeA();
+        game.playRedAt(0)
+                .playBlueAt(0)
+                .playRedAt(1)
+                .playBlueAt(1)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(0)
+                .playBlueAt(3)
+                .playRedAt(0)
+                .playBlueAt(3)
+                .playRedAt(1)
+                .playBlueAt(2);
+
+        assertEquals("""
+                        |X   |
+                        |XX 0|
+                        |0000|
+                        |XXX0|
+                        ------
+                        Blue has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+    }
+
+    @Test
+    public void testGameEndsWhenFillingGapInThreeCheckerBackwardDiagonalLine() {
+
+        Linea game =  basicGameModeA();
+
+        game.playRedAt(0)
+                .playBlueAt(0)
+                .playRedAt(0)
+                .playBlueAt(1)
+                .playRedAt(0)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(1)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(3)
+                .playBlueAt(3)
+                .playRedAt(1);
+
+
+
+        assertEquals("""
+                        |X  0|
+                        |XX X|
+                        |00X0|
+                        |X00X|
+                        ------
+                        Red has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+
+    }
+
+
 
     @Test void testLineaGameCanFinishInModeBAfterADiagonalWin() {
         Linea game = gameWithDiagonalRedWin('B');
@@ -243,7 +307,7 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishInModeBAfterInvertedDiagonalWin() {
@@ -268,31 +332,31 @@ public class LineaTests {
                         Red has won!
                         """,
                 game.show());
-        assertTrue(game.finished());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameDoesNotFinishInModeAWithADiagonalWin() {
-        assertFalse(gameWithDiagonalRedWin('A').finished());
+        assertFalse(gameWithDiagonalRedWin('A').isGameFinished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAHorizontalWin() {
-        assertFalse(gameWithHorizontalRedWin('B').finished());
+        assertFalse(gameWithHorizontalRedWin('B').isGameFinished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAVerticalWin() {
-        assertFalse(gameWithVerticalRedWin('B').finished());
+        assertFalse(gameWithVerticalRedWin('B').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinHorizontallyInModeC() {
-        assertTrue(gameWithHorizontalRedWin('C').finished());
+        assertTrue(gameWithHorizontalRedWin('C').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinVerticallyInModeC() {
-        assertTrue(gameWithVerticalRedWin('C').finished());
+        assertTrue(gameWithVerticalRedWin('C').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinDiagonallyInModeC() {
-        assertTrue(gameWithDiagonalRedWin('C').finished());
+        assertTrue(gameWithDiagonalRedWin('C').isGameFinished());
     }
 
 

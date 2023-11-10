@@ -6,7 +6,7 @@ public class PlayingRed extends GameState {
     }
 
     public void playRedAt(Linea game, int column) {
-        game.placePiece(column, GameState.RedPlayer);
+        game.placePieceAt(column, GameState.RedPlayer);
     }
 
     public GameState changeTurn() {

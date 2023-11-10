@@ -1,12 +1,15 @@
 package linea;
 
 public class PlayingBlue extends GameState {
+
+    public static final String notRedPlayerTurnMessage = "Not red player's turn!";
+
     public void playBlueAt(Linea game, int column) {
-        game.placePiece(column, GameState.BluePlayer);
+        game.placePieceAt(column, GameState.BluePlayer);
     }
 
     public void playRedAt(Linea game, int column) {
-        throw new RuntimeException("Not red player's turn!");
+        throw new RuntimeException(notRedPlayerTurnMessage);
     }
 
     public GameState changeTurn() {

@@ -1,8 +1,8 @@
 package linea;
 
-public class CompleteGame extends TypeOfGame {
+public class AllDirectionsGame extends TypeOfGame {
 
-    public CompleteGame(){
+    public AllDirectionsGame(){
         this.name = 'C';
     }
 
