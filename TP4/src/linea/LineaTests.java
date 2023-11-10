@@ -69,12 +69,12 @@ public class LineaTests {
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(basicGameModeA().playRedAt(1).isGameFinished());
+        assertFalse(basicGameModeA().playRedAt(2).isGameFinished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
         assertThrowsLike("Not red player's turn!",
-                            () -> basicGameModeA().playRedAt(0).playRedAt(0));
+                            () -> basicGameModeA().playRedAt(1).playRedAt(1));
     }
 
     @Test void testLineaCanPlayBlueAfterRed() {
@@ -86,21 +86,21 @@ public class LineaTests {
                         ------
                         Red's turn
                         """,
-                basicGameModeA().playRedAt(0)
-                    .playBlueAt(0).show());
+                basicGameModeA().playRedAt(1)
+                    .playBlueAt(1).show());
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
         assertThrowsLike("Not blue player's turn!",
-                            () -> basicGameModeA().playBlueAt(0));
+                            () -> basicGameModeA().playBlueAt(1));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
         assertThrowsLike("Not blue player's turn!",
                             () -> basicGameModeA()
-                                    .playRedAt(0)
-                                    .playBlueAt(0)
-                                    .playBlueAt(0));
+                                    .playRedAt(1)
+                                    .playBlueAt(1)
+                                    .playBlueAt(1));
 
     }
 
@@ -114,9 +114,9 @@ public class LineaTests {
                         Blue's turn
                         """,
                 basicGameModeA()
-                    .playRedAt(0)
-                    .playBlueAt(0)
-                    .playRedAt(0).show());
+                    .playRedAt(1)
+                    .playBlueAt(1)
+                    .playRedAt(1).show());
     }
 
 
@@ -126,32 +126,32 @@ public class LineaTests {
     @Test void testPlayerCanNotPlaceOutsideColumns() {
         assertThrowsLike("Column out of bounds!",
                 () -> basicGameModeA()
-                        .playRedAt(4));
+                        .playRedAt(5));
     }
 
     @Test void testPlayerCanNotPlaceIfColumnIsFull() {
         assertThrowsLike("Column is full!",
                             () -> new Linea(1, 4, 'A')
-                                    .playRedAt(0).playBlueAt(0));
+                                    .playRedAt(1).playBlueAt(1));
     }
 
     @Test void testLineaFinishesAfterFullBoard() {
         assertTrue(new Linea(1, 4, 'A')
-                        .playRedAt(0)
-                        .playBlueAt(1)
-                        .playRedAt(2)
-                        .playBlueAt(3)
+                        .playRedAt(1)
+                        .playBlueAt(2)
+                        .playRedAt(3)
+                        .playBlueAt(4)
                         .isGameFinished());
     }
 
-    @Test void testLineaCanNotPlayAfterFinished() {
+    @Test void testLineaCanNotPlayAfterTie() {
         assertThrowsLike("Game is over! It's a tie!",
                             () -> new Linea(1, 4, 'A')
-                                    .playRedAt(0)
-                                    .playBlueAt(1)
-                                    .playRedAt(2)
-                                    .playBlueAt(3)
-                                    .playRedAt(0));
+                                    .playRedAt(1)
+                                    .playBlueAt(2)
+                                    .playRedAt(3)
+                                    .playBlueAt(4)
+                                    .playRedAt(1));
     }
 
     @Test void testLineaGameCanFinishAfterAHorizontalWin() {
@@ -170,21 +170,21 @@ public class LineaTests {
 
     @Test void testLineaGameCanFinishInAnyRow() {
         Linea game = basicGameModeA();
-        game.playRedAt(0)
-                .playBlueAt(0)
-                .playRedAt(1)
+        game.playRedAt(1)
                 .playBlueAt(1)
                 .playRedAt(2)
                 .playBlueAt(2)
-                .playRedAt(0)
+                .playRedAt(3)
                 .playBlueAt(3)
                 .playRedAt(1)
-                .playBlueAt(0)
+                .playBlueAt(4)
                 .playRedAt(2)
                 .playBlueAt(1)
                 .playRedAt(3)
                 .playBlueAt(2)
-                .playRedAt(3);
+                .playRedAt(4)
+                .playBlueAt(3)
+                .playRedAt(4);
         assertEquals("""
                         |000 |
                         |XXXX|
@@ -213,13 +213,13 @@ public class LineaTests {
 
     @Test void TestLineaPlayerCanWinInAnyColumn() {
         Linea game = basicGameModeA();
-        game.playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2);
+        game.playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3);
         assertEquals("""
                         |  X |
                         | 0X |
@@ -235,22 +235,20 @@ public class LineaTests {
 
     @Test void testGameEndsWhenFillingGapInThreeCheckerHorizontalLine() {
         Linea game = basicGameModeA();
-        game.playRedAt(0)
-                .playBlueAt(0)
-                .playRedAt(1)
+        game.playRedAt(1)
                 .playBlueAt(1)
                 .playRedAt(2)
-                .playBlueAt(3)
-                .playRedAt(0)
-                .playBlueAt(3)
-                .playRedAt(0)
-                .playBlueAt(3)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(4)
                 .playRedAt(1)
-                .playBlueAt(2);
+                .playBlueAt(4)
+                .playRedAt(1)
+                .playBlueAt(3);
 
         assertEquals("""
                         |X   |
-                        |XX 0|
+                        |X   |
                         |0000|
                         |XXX0|
                         ------
@@ -265,19 +263,19 @@ public class LineaTests {
 
         Linea game =  new Linea(4, 4, 'B');
 
-        game.playRedAt(0)
-                .playBlueAt(0)
-                .playRedAt(0)
+        game.playRedAt(1)
                 .playBlueAt(1)
-                .playRedAt(0)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(3)
+                .playRedAt(4)
                 .playBlueAt(2)
                 .playRedAt(3)
-                .playBlueAt(1)
-                .playRedAt(2)
-                .playBlueAt(3)
-                .playRedAt(3)
-                .playBlueAt(3)
-                .playRedAt(1);
+                .playBlueAt(4)
+                .playRedAt(4)
+                .playBlueAt(4)
+                .playRedAt(2);
 
 
 
@@ -312,17 +310,17 @@ public class LineaTests {
 
     @Test void testLineaGameCanFinishInModeBAfterInvertedDiagonalWin() {
         Linea game = new Linea(4, 4, 'B');
-        game.playRedAt(3)
-            .playBlueAt(2)
-            .playRedAt(0)
-            .playBlueAt(1)
-            .playRedAt(0)
-            .playBlueAt(1)
-            .playRedAt(2)
+        game.playRedAt(4)
             .playBlueAt(3)
             .playRedAt(1)
-            .playBlueAt(0)
-            .playRedAt(0);
+            .playBlueAt(2)
+            .playRedAt(1)
+            .playBlueAt(2)
+            .playRedAt(3)
+            .playBlueAt(4)
+            .playRedAt(2)
+            .playBlueAt(1)
+            .playRedAt(1);
         assertEquals("""
                         |X   |
                         |0X  |
@@ -372,39 +370,39 @@ public class LineaTests {
 
     private Linea gameWithHorizontalRedWin(char mode) {
         return new Linea(4, 4, mode)
-                .playRedAt(0)
-                .playBlueAt(0)
                 .playRedAt(1)
                 .playBlueAt(1)
                 .playRedAt(2)
                 .playBlueAt(2)
-                .playRedAt(3);
+                .playRedAt(3)
+                .playBlueAt(3)
+                .playRedAt(4);
     }
 
     private Linea gameWithVerticalRedWin(char mode) {
         return new Linea(4, 4, mode)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0);
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1);
     }
 
     private Linea gameWithDiagonalRedWin(char mode) {
         return new Linea(4, 4, mode)
-                .playRedAt(0)
-                .playBlueAt(1)
                 .playRedAt(1)
-                .playBlueAt(2)
-                .playRedAt(3)
                 .playBlueAt(2)
                 .playRedAt(2)
                 .playBlueAt(3)
-                .playRedAt(0)
+                .playRedAt(4)
                 .playBlueAt(3)
-                .playRedAt(3);
+                .playRedAt(3)
+                .playBlueAt(4)
+                .playRedAt(1)
+                .playBlueAt(4)
+                .playRedAt(4);
     }
 
 
