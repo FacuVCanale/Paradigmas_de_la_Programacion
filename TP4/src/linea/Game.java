@@ -1,7 +1,5 @@
 package linea;
 
-
-
 public class Game {
 
     public static void main( String[] args) throws Exception {
@@ -10,19 +8,19 @@ public class Game {
 
         Linea game = new Linea( prompt( "Base? " ), prompt( "Height? " ), 'C' );
 
-        System.out.println( game.showBoard() );
+        System.out.println( game.show() );
 
-        while ( !game.finished() ) {
+        while ( !game.isGameFinished() ) {
 
             game.playRedAt( prompt( "Red? " ) );
 
-            System.out.println( game.showBoard() );
+            System.out.println( game.show() );
 
-            if ( !game.finished() ) {
+            if ( !game.isGameFinished() ) {
 
                 game.playBlueAt( prompt( "Blue? " ) );
 
-                System.out.println( game.showBoard() );
+                System.out.println( game.show() );
 
             }
 
@@ -38,7 +36,7 @@ public class Game {
 
         System.out.print( message );
 
-        return Integer.parseInt( System.console().readLine() );
+        return Integer.parseInt( System.console().readLine() ) -1;
 
     }
 

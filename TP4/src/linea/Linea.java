@@ -1,29 +1,25 @@
 package linea;
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-public class Linea  {
+public class Linea {
 
-    private static final char UNMARKED = ' ';
+    private static final char UNMARKED_SLOT = ' ';
+
+
+    public static final String columnOutOfBoundsError = "Column out of bounds!";
 
     public static final String columnIsFullError = "Column is full!";
 
-
-    private final char BluePlayer = '0';
-
-    private final char RedPlayer = 'X';
-
     private final TypeOfGame typeOfGame;
 
-    private char currentPlayer = RedPlayer;
+    private GameState gameState = new PlayingRed();
 
-    private char[][] board;
-    //PARA MI, LA FORMA DE SOLUCIONAR LOS PROBLEMAS DE BOARD SEA CREANDO CLASES ROW Y COL,
-    // O DIRECTAMENTE BOARD, COSA DE QUE SE MANEJE A SÍ MISMO Y SEPA MEJOR SUS COSAS.
+    private ArrayList<ArrayList<Character>> board = new ArrayList<>();
 
-    
-    private int BOARD_HEIGHT;
-    private int BOARD_WIDTH;
+    private final int BOARD_HEIGHT;
+    private final int BOARD_WIDTH;
 
     public Linea(int rows, int cols, char typeOfGame) {
 
@@ -31,61 +27,46 @@ public class Linea  {
         this.BOARD_WIDTH = cols;
         this.typeOfGame = TypeOfGame.getTypeOfGame(typeOfGame);
 
-
-        this.board = new char[rows][cols];
-
-
-        IntStream.range(0, BOARD_HEIGHT)
-                .forEach(i ->
-                        IntStream.range(0, BOARD_WIDTH)
-                                .forEach(j ->
-                                        board[i][j] = UNMARKED));
+        IntStream.range(0, BOARD_WIDTH)
+                .forEach(i -> board.add(new ArrayList<>()));
     }
-
-
 
     public Linea playBlueAt(int column) {
-
-        placePiece(column, BluePlayer);
-
-        currentPlayer = RedPlayer;
-
+        gameState.playBlueAt(this, column - 1);
         return this;
     }
-
 
     public Linea playRedAt(int column) {
-
-       placePiece(column, RedPlayer);
-
-        currentPlayer = BluePlayer;
-
+        gameState.playRedAt(this, column - 1);
         return this;
     }
 
+    public void placePieceAt(int column, char checker) {
 
-    public void placePiece(int column, char player) {
-
-        if(currentPlayer != player) {
-            throw new RuntimeException("Not blue player's turn!");
+        if (column < 0 || column >= this.BOARD_WIDTH) {
+            throw new RuntimeException(columnOutOfBoundsError);
         }
 
-        int row = checkRowForColumn(column);
+        if (this.board.get(column).size() == this.BOARD_HEIGHT) {
+            throw new RuntimeException(columnIsFullError);
+        }
 
-        this.board[row][column] = player;
-
-        currentPlayer = RedPlayer;
-
+        this.board.get(column).add(checker);
+        updateGameStateAfterMove(column);
     }
 
-    private int checkRowForColumn(int column) {
-        return IntStream.rangeClosed(0, this.BOARD_HEIGHT - 1)
-                .filter(row -> this.board[row][column] == UNMARKED)
-                .reduce((first, second) -> second)
-                .orElseThrow(() -> new RuntimeException(columnIsFullError));
+    private Linea updateGameStateAfterMove(int column) {
+        if (typeOfGame.validateWin(this, column)) {
+            gameState = gameState.win();
+        } else if (areAllColumnsFilled()) {
+            gameState = gameState.tie();
+        } else {
+            gameState = gameState.changeTurn();
+        }
+        return this;
     }
 
-    public String showBoard() {
+    public String show() {
 
         StringBuilder decoratedBoard = new StringBuilder();
 
@@ -93,7 +74,7 @@ public class Linea  {
                 .forEach(i -> {
                     decoratedBoard.append("|");
                     IntStream.range(0, BOARD_WIDTH)
-                            .forEach(j -> decoratedBoard.append(this.board[i][j]));
+                            .forEach(j -> decoratedBoard.append(getSymbolAtPosition(i, j)));
                     decoratedBoard.append("|\n");
                 });
 
@@ -102,62 +83,76 @@ public class Linea  {
 
         decoratedBoard.append("\n");
 
+        decoratedBoard.append(gameState.show() + "\n");
+
         return decoratedBoard.toString();
 
     }
 
-
-    // hacer metodo oregutnar en el que nos evitamos ahcer una matriz preseteada con valores anecdoticos  de la matriz que noi tiene fuchas.
-    // el metodo preguntar podria hacer que pregunte si hay una ficha roja o azul, si esta vacio, etc
-    // el tablero es una lista de columnas, y columnas es una lista de fichas. columnas no son un objeto en si
-    // Preguntar devuelve nada, X o O
-
-    // Aplicar Metodo Eli (recortar tablero 4x2 + 1 X 4x2 + 1)
-
-
-    // juego es una lista de n listas vacias. El test nos va a empujar a hacer algo asi.
-    // Tenemos un modelo de hacer el juego, y a la hora de verlo, el show lo proyecta distinto.
-    //
-
-    // preguntar devuelve nada afuera de los bordes. esto facilita muchisimo preguntar las diagonales,
-    // y de hecho solo hay que chequearlo desde la ultima ficha puesta, y no todas
-
-
-
-    //Crear clase quw maneje el juego, si termino, etc.
-
-
-   // private Linea changeTurn() {
-      //  currentPlayer = currentPlayer.
-    //}
-
-    public boolean isFull() {
+    private boolean areAllColumnsFilled() {
         return IntStream.range(0, BOARD_WIDTH)
-                .noneMatch(col -> board[0][col] == UNMARKED);
+                .noneMatch(col -> getSymbolAtPosition(0, col) == UNMARKED_SLOT);
     }
 
 
-    public boolean finished() {
-        return isFull() || typeOfGame.validateWin(this);
+    public boolean isGameFinished() {
+        return gameState instanceof Tie || gameState instanceof Win;
     }
 
+    private char getSymbolAtPosition(int row, int col) {
 
-    public int getBoardHeight() {
-        return this.BOARD_HEIGHT;
+        int rowIndex = BOARD_HEIGHT - 1 - row;
+
+        if (col >= 0 && col < BOARD_WIDTH) {
+
+            ArrayList<Character> column = board.get(col);
+
+            if (rowIndex >= 0 && rowIndex < column.size()) {
+
+                return column.get(rowIndex);
+
+            }
+
+        }
+
+        return UNMARKED_SLOT;
+
     }
 
+    protected boolean checkVerticalWin(int xAxis) {
 
-    public int getBoardWidth() {
-        return this.BOARD_WIDTH;
+        int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
+
+        char symbol = this.getSymbolAtPosition(yAxis, xAxis);
+
+        return IntStream.range(1, 4).mapToObj(row -> this.getSymbolAtPosition(row + yAxis, xAxis)).allMatch(s -> s == symbol);
     }
 
+    protected boolean checkHorizontalWin(int xAxis) {
 
-    public char getBox(int row, int col) {
-        return this.board[row][col];
+        int yAxis = BOARD_HEIGHT - this.board.get(xAxis).size();
+
+        return checkWinningLineFromCoord(xAxis,yAxis,1,0);
+
     }
 
-    public char getCurrentPlayer() {
-        return this.currentPlayer;
+    protected boolean checkDiagonalWin(int x) {
+
+        int y = BOARD_HEIGHT - this.board.get(x).size();
+
+        return  checkWinningLineFromCoord(x,y,-1,1) || checkWinningLineFromCoord(x,y,-1,-1); // anda mal diagonal inversa
     }
+
+    private boolean checkWinningLineFromCoord(int xAxis, int yAxis, int stepX, int stepY){
+
+        char symbol = this.getSymbolAtPosition(yAxis, xAxis);
+
+        return IntStream.range(0,4)
+                .mapToObj(index -> IntStream.range(0,4)
+                                            .mapToObj(delta -> this.getSymbolAtPosition(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
+                                            .allMatch(s -> s == symbol ))
+                .anyMatch(s -> s);
+    }
+
 
 }

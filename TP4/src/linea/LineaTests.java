@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LineaTests {
     @Test void testLineaIsNotFinished() {
-        assertFalse(new Linea(4,4, 'A').finished());
+        assertFalse(basicGameModeA().isGameFinished());
     }
 
     @Test void testLineaCanShowBoard() {
@@ -17,8 +17,9 @@ public class LineaTests {
                         |    |
                         |    |
                         ------
+                        Red's turn
                         """,
-                new Linea(4,4, 'A').showBoard());
+                basicGameModeA().show());
     }
 
     @Test void testLineaCanAdjustRowSize() {
@@ -26,8 +27,9 @@ public class LineaTests {
                         |    |
                         |    |
                         ------
+                        Red's turn
                         """,
-                new Linea(2,4, 'A').showBoard());
+                new Linea(2,4, 'A').show());
     }
 
     @Test void testLineaCanAdjustColumnSize() {
@@ -37,20 +39,21 @@ public class LineaTests {
                         |  |
                         |  |
                         ----
+                        Red's turn
                         """,
-                new Linea(4,2, 'A').showBoard());
+                new Linea(4,2, 'A').show());
     }
 
-    @Test void testLineaCanPlayRedAt() {
+    @Test void testLineaCanPlayRed() {
         assertEquals("""
                         |    |
                         |    |
                         |    |
                         |X   |
                         ------
+                        Blue's turn
                         """,
-                new Linea(4,4, 'A')
-                        .playRedAt(0).showBoard());
+                basicGameModeA().playRedAt(1).show());
     }
 
     @Test void testLineaCanPlayRedAtDifferentColumn() {
@@ -60,20 +63,18 @@ public class LineaTests {
                         |    |
                         | X  |
                         ------
+                        Blue's turn
                         """,
-                new Linea(4,4, 'A')
-                        .playRedAt(1).showBoard());
+                basicGameModeA().playRedAt(2).show());
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(new Linea(4,4, 'A').playRedAt(0).finished());
+        assertFalse(basicGameModeA().playRedAt(1).isGameFinished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not red player's turn!",
-                            () -> new Linea(4, 4, 'A')
-                                    .playRedAt(0)
-                                    .playRedAt(0));
+        assertThrowsLike(PlayingBlue.notRedPlayerTurnMessage,
+                            () -> basicGameModeA().playRedAt(1).playRedAt(1));
     }
 
     @Test void testLineaCanPlayBlueAfterRed() {
@@ -83,24 +84,24 @@ public class LineaTests {
                         |0   |
                         |X   |
                         ------
+                        Red's turn
                         """,
-                new Linea(4,4, 'A')
-                    .playRedAt(0)
-                    .playBlueAt(0).showBoard());
+                basicGameModeA().playRedAt(1)
+                    .playBlueAt(1).show());
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
-        assertThrowsLike("Not blue player's turn!",
-                            () -> new Linea(4, 4, 'A')
-                                    .playBlueAt(0));
+        assertThrowsLike(PlayingRed.notBluePlayerTurnMessage,
+                            () -> basicGameModeA().playBlueAt(1));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not blue player's turn!",
-                            () -> new Linea(4, 4, 'A')
-                                    .playRedAt(0)
-                                    .playBlueAt(0)
-                                    .playBlueAt(0));
+        assertThrowsLike(PlayingRed.notBluePlayerTurnMessage,
+                            () -> basicGameModeA()
+                                    .playRedAt(1)
+                                    .playBlueAt(1)
+                                    .playBlueAt(1));
+
     }
 
     @Test void testLineaGameRedCanPlayAfterBlue() {
@@ -110,177 +111,291 @@ public class LineaTests {
                         |0   |
                         |X   |
                         ------
+                        Blue's turn
                         """,
-                new Linea(4, 4, 'A')
-                    .playRedAt(0)
-                    .playBlueAt(0)
-                    .playRedAt(0).showBoard());
+                basicGameModeA()
+                    .playRedAt(1)
+                    .playBlueAt(1)
+                    .playRedAt(1).show());
     }
 
     @Test void testPlayerCanNotPlaceOutsideColumns() {
-        assertThrowsLike("Column out of bounds!",
-                () -> new Linea(4, 4, 'A')
-                        .playRedAt(4));
+        assertThrowsLike(Linea.columnOutOfBoundsError,
+                () -> basicGameModeA()
+                        .playRedAt(5));
     }
 
     @Test void testPlayerCanNotPlaceIfColumnIsFull() {
-        assertThrowsLike("Column is full!",
+        assertThrowsLike(Linea.columnIsFullError,
                             () -> new Linea(1, 4, 'A')
-                                    .playRedAt(0).playBlueAt(0));
+                                    .playRedAt(1).playBlueAt(1));
     }
 
     @Test void testLineaFinishesAfterFullBoard() {
         assertTrue(new Linea(1, 4, 'A')
-                        .playRedAt(0)
-                        .playBlueAt(1)
-                        .playRedAt(2)
-                        .playBlueAt(3)
-                        .finished());
+                        .playRedAt(1)
+                        .playBlueAt(2)
+                        .playRedAt(3)
+                        .playBlueAt(4)
+                        .isGameFinished());
     }
 
-    @Test void testLineaCanNotPlayAfterFinished() {
-        assertThrowsLike("Game is finished!",
+    @Test void testLineaCanNotPlayAfterWin() {
+        assertThrowsLike(GameState.gameIsOverMessage + " " + "Red has won!",
+                () -> gameWithHorizontalRedWin('A').playBlueAt(1));
+    }
+
+    @Test void testLineaCanNotPlayAfterTie() {
+        assertThrowsLike(GameState.gameIsOverMessage + " " + Tie.ItsATieMessage,
                             () -> new Linea(1, 4, 'A')
-                                    .playRedAt(0)
-                                    .playBlueAt(1)
-                                    .playRedAt(2)
-                                    .playBlueAt(3)
-                                    .playRedAt(0));
+                                    .playRedAt(1)
+                                    .playBlueAt(2)
+                                    .playRedAt(3)
+                                    .playBlueAt(4)
+                                    .playRedAt(1));
     }
 
     @Test void testLineaGameCanFinishAfterAHorizontalWin() {
-        Linea game = gameWithHorizontalRedWin(4,4, 'A');
+        Linea game = gameWithHorizontalRedWin('A');
         assertEquals("""
                         |    |
                         |    |
                         |000 |
                         |XXXX|
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishInAnyRow() {
-        Linea game = new Linea(4, 4, 'A');
-        game.playRedAt(0)
-                .playBlueAt(0)
-                .playRedAt(1)
+        Linea game = basicGameModeA();
+        game.playRedAt(1)
                 .playBlueAt(1)
                 .playRedAt(2)
                 .playBlueAt(2)
-                .playRedAt(0)
+                .playRedAt(3)
                 .playBlueAt(3)
                 .playRedAt(1)
-                .playBlueAt(0)
+                .playBlueAt(4)
                 .playRedAt(2)
                 .playBlueAt(1)
                 .playRedAt(3)
                 .playBlueAt(2)
-                .playRedAt(3);
+                .playRedAt(4)
+                .playBlueAt(3)
+                .playRedAt(4);
         assertEquals("""
                         |000 |
                         |XXXX|
                         |000X|
                         |XXX0|
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishAfterAVerticalWin() {
-        Linea game = gameWithVerticalRedWin(4,4, 'A');
+        Linea game = gameWithVerticalRedWin('A');
         assertEquals("""
                         |X   |
                         |X0  |
                         |X0  |
                         |X0  |
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void TestLineaPlayerCanWinInAnyColumn() {
-        Linea game = new Linea(4, 4, 'A');
-        game.playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2)
-                .playBlueAt(1)
-                .playRedAt(2);
+        Linea game = basicGameModeA();
+        game.playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(2)
+                .playRedAt(3);
         assertEquals("""
                         |  X |
                         | 0X |
                         | 0X |
                         | 0X |
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
+
+    @Test void testGameEndsWhenFillingGapInThreeCheckerHorizontalLine() {
+        Linea game = basicGameModeA();
+        game.playRedAt(1)
+                .playBlueAt(1)
+                .playRedAt(2)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(4)
+                .playRedAt(1)
+                .playBlueAt(4)
+                .playRedAt(1)
+                .playBlueAt(3);
+
+        assertEquals("""
+                        |X   |
+                        |X   |
+                        |0000|
+                        |XXX0|
+                        ------
+                        Blue has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+    }
+
+    @Test
+    public void testGameEndsWhenFillingGapInThreeCheckerBackwardDiagonalLine() {
+
+        Linea game =  new Linea(4, 4, 'B');
+
+        game.playRedAt(1)
+                .playBlueAt(1)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(3)
+                .playRedAt(4)
+                .playBlueAt(2)
+                .playRedAt(3)
+                .playBlueAt(4)
+                .playRedAt(4)
+                .playBlueAt(4)
+                .playRedAt(2);
+
+
+
+        assertEquals("""
+                        |X  0|
+                        |XX X|
+                        |00X0|
+                        |X00X|
+                        ------
+                        Red has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+
+    }
+
+
+
+    @Test
+    public void testGameEndsWhenFillingGapInThreeCheckerDiagonalLine() {
+
+        Linea game =  new Linea(4, 4, 'B');
+
+        game.playRedAt(1)
+                .playBlueAt(1)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(4)
+                .playBlueAt(4)
+                .playRedAt(4)
+                .playBlueAt(1)
+                .playRedAt(4)
+                .playBlueAt(2)
+                .playRedAt(3);
+
+
+        assertEquals("""
+                        |   X|
+                        |00XX|
+                        |0X00|
+                        |XX0X|
+                        ------
+                        Red has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+
+    }
+
+
     @Test void testLineaGameCanFinishInModeBAfterADiagonalWin() {
-        Linea game = gameWithDiagonalRedWin(4,4, 'B');
+        Linea game = gameWithDiagonalRedWin('B');
         assertEquals("""
                         |   X|
                         |  X0|
                         |XX00|
                         |X00X|
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameCanFinishInModeBAfterInvertedDiagonalWin() {
         Linea game = new Linea(4, 4, 'B');
-        game.playRedAt(3)
-            .playBlueAt(2)
-            .playRedAt(0)
-            .playBlueAt(1)
-            .playRedAt(0)
-            .playBlueAt(1)
-            .playRedAt(2)
+        game.playRedAt(4)
             .playBlueAt(3)
             .playRedAt(1)
-            .playBlueAt(0)
-            .playRedAt(0);
+            .playBlueAt(2)
+            .playRedAt(1)
+            .playBlueAt(2)
+            .playRedAt(3)
+            .playBlueAt(4)
+            .playRedAt(2)
+            .playBlueAt(1)
+            .playRedAt(1);
         assertEquals("""
                         |X   |
                         |0X  |
                         |X0X0|
                         |X00X|
                         ------
+                        Red has won!
                         """,
-                game.showBoard());
-        assertTrue(game.finished());
+                game.show());
+        assertTrue(game.isGameFinished());
     }
 
     @Test void testLineaGameDoesNotFinishInModeAWithADiagonalWin() {
-        assertFalse(gameWithDiagonalRedWin(4,4, 'A').finished());
+        assertFalse(gameWithDiagonalRedWin('A').isGameFinished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAHorizontalWin() {
-        assertFalse(gameWithHorizontalRedWin(4,4, 'B').finished());
+        assertFalse(gameWithHorizontalRedWin('B').isGameFinished());
     }
 
     @Test void testLineaCanNotWinInModeBWithAVerticalWin() {
-        assertFalse(gameWithVerticalRedWin(4,4, 'B').finished());
+        assertFalse(gameWithVerticalRedWin('B').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinHorizontallyInModeC() {
-        assertTrue(gameWithHorizontalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithHorizontalRedWin('C').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinVerticallyInModeC() {
-        assertTrue(gameWithVerticalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithVerticalRedWin('C').isGameFinished());
     }
 
     @Test void testLineaPlayerCanWinDiagonallyInModeC() {
-        assertTrue(gameWithDiagonalRedWin(4,4, 'C').finished());
+        assertTrue(gameWithDiagonalRedWin('C').isGameFinished());
+    }
+
+
+
+    private Linea basicGameModeA() {
+        return new Linea(4, 4, 'A');
     }
 
     private void assertThrowsLike(String message, Executable executable) {
@@ -288,41 +403,41 @@ public class LineaTests {
                 assertThrows(RuntimeException.class, executable).getMessage());
     }
 
-    private Linea gameWithHorizontalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
-                .playRedAt(0)
-                .playBlueAt(0)
+    private Linea gameWithHorizontalRedWin(char mode) {
+        return new Linea(4, 4, mode)
                 .playRedAt(1)
                 .playBlueAt(1)
                 .playRedAt(2)
-                .playBlueAt(2)
-                .playRedAt(3);
-    }
-
-    private Linea gameWithVerticalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(0);
-    }
-
-    private Linea gameWithDiagonalRedWin(int rows, int cols, char mode) {
-        return new Linea(rows, cols, mode)
-                .playRedAt(0)
-                .playBlueAt(1)
-                .playRedAt(1)
                 .playBlueAt(2)
                 .playRedAt(3)
+                .playBlueAt(3)
+                .playRedAt(4);
+    }
+
+    private Linea gameWithVerticalRedWin(char mode) {
+        return new Linea(4, 4, mode)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1)
+                .playBlueAt(2)
+                .playRedAt(1);
+    }
+
+    private Linea gameWithDiagonalRedWin(char mode) {
+        return new Linea(4, 4, mode)
+                .playRedAt(1)
                 .playBlueAt(2)
                 .playRedAt(2)
                 .playBlueAt(3)
-                .playRedAt(0)
+                .playRedAt(4)
                 .playBlueAt(3)
-                .playRedAt(3);
+                .playRedAt(3)
+                .playBlueAt(4)
+                .playRedAt(1)
+                .playBlueAt(4)
+                .playRedAt(4);
     }
 
 
