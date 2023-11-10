@@ -140,7 +140,7 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
 
         int y = BOARD_HEIGHT - this.board.get(x).size();
 
-        return  checkWinningLineFromCoord(x,y,-1,-1); // anda mal checkWinningLineFromCoord(x,y,-1,1) (diagonal inversa)
+        return  checkWinningLineFromCoord(x,y,-1,1) || checkWinningLineFromCoord(x,y,-1,-1); // anda mal diagonal inversa
     }
 
     private boolean checkWinningLineFromCoord(int xAxis, int yAxis, int stepX, int stepY){
@@ -152,5 +152,6 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
                                             .mapToObj(delta -> this.getSymbolAtPosition(yAxis + (delta - index)*stepY,xAxis + (delta - index)*stepX))
                                             .allMatch(s -> s == symbol )).anyMatch(s -> ((Boolean) s));
     }
+
 
 }
