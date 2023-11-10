@@ -73,7 +73,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not red player's turn!",
+        assertThrowsLike(PlayingBlue.notRedPlayerTurnMessage,
                             () -> basicGameModeA().playRedAt(1).playRedAt(1));
     }
 
@@ -91,12 +91,12 @@ public class LineaTests {
     }
 
     @Test void testLineaBlueCanNotPlayFirst() {
-        assertThrowsLike("Not blue player's turn!",
+        assertThrowsLike(PlayingRed.notBluePlayerTurnMessage,
                             () -> basicGameModeA().playBlueAt(1));
     }
 
     @Test void testLineaGameBlueCanNotPlayTwiceInARow() {
-        assertThrowsLike("Not blue player's turn!",
+        assertThrowsLike(PlayingRed.notBluePlayerTurnMessage,
                             () -> basicGameModeA()
                                     .playRedAt(1)
                                     .playBlueAt(1)
@@ -124,13 +124,13 @@ public class LineaTests {
 
 
     @Test void testPlayerCanNotPlaceOutsideColumns() {
-        assertThrowsLike("Column out of bounds!",
+        assertThrowsLike(Linea.columnOutOfBoundsError,
                 () -> basicGameModeA()
                         .playRedAt(5));
     }
 
     @Test void testPlayerCanNotPlaceIfColumnIsFull() {
-        assertThrowsLike("Column is full!",
+        assertThrowsLike(Linea.columnIsFullError,
                             () -> new Linea(1, 4, 'A')
                                     .playRedAt(1).playBlueAt(1));
     }
@@ -145,17 +145,12 @@ public class LineaTests {
     }
 
     @Test void testLineaCanNotPlayAfterWin() {
-        assertThrowsLike(Win.gameIsOverMessage,
-                () -> new Linea(1, 4, 'A')
-                        .playRedAt(1)
-                        .playBlueAt(2)
-                        .playRedAt(3)
-                        .playBlueAt(4)
-                        .playRedAt(1));
+        assertThrowsLike(GameState.gameIsOverMessage + " " + "Red has won!",
+                () -> gameWithHorizontalRedWin('A').playBlueAt(1));
     }
 
     @Test void testLineaCanNotPlayAfterTie() {
-        assertThrowsLike(Tie.gameIsOverMessage,
+        assertThrowsLike(GameState.gameIsOverMessage + " " + Tie.ItsATieMessage,
                             () -> new Linea(1, 4, 'A')
                                     .playRedAt(1)
                                     .playBlueAt(2)

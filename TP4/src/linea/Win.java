@@ -7,7 +7,7 @@ public class Win extends GameState {
     }
 
     public void playBlueAt(Linea game, int column) {
-        throw new RuntimeException(GameState.gameIsOverMessage);
+        throw new RuntimeException(gameIsOverMessage + " " + message);
     }
 
     public void playRedAt(Linea game, int column) {
@@ -15,15 +15,15 @@ public class Win extends GameState {
     }
 
     public GameState changeTurn() {
-        throw new RuntimeException(gameIsOverMessage);
+        throw new RuntimeException(GameState.gameIsOverMessage + " " + message);
     }
 
     public GameState win() {
-        throw new RuntimeException(gameIsOverMessage);
+        throw new RuntimeException(GameState.gameIsOverMessage + " " + message);
     }
 
     public GameState tie() {
-        throw new RuntimeException(gameIsOverMessage);
+        throw new RuntimeException(GameState.gameIsOverMessage + " " + message);
     }
 
     public String show() {

@@ -1,8 +1,12 @@
 package linea;
 
 public class PlayingRed extends GameState {
+
+
+    public static final String notBluePlayerTurnMessage = "Not blue player's turn!";
+
     public void playBlueAt(Linea game, int column) {
-        throw new RuntimeException("Not blue player's turn!");
+        throw new RuntimeException(notBluePlayerTurnMessage);
     }
 
     public void playRedAt(Linea game, int column) {
