@@ -1,16 +1,17 @@
 package linea;
 
-public class Tie extends GameState {
-
-    public static final String gameIsOverMessage = "Game is over! It's a tie!";
-
+public class Win extends GameState {
+    private final String message;
+    public Win(String message) {
+        this.message = message;
+    }
 
     public void playBlueAt(Linea game, int column) {
-        throw new RuntimeException(gameIsOverMessage);
+        throw new RuntimeException(GameState.gameIsOverMessage);
     }
 
     public void playRedAt(Linea game, int column) {
-        throw new RuntimeException(gameIsOverMessage);
+        throw new RuntimeException(GameState.gameIsOverMessage + " " + message);
     }
 
     public GameState changeTurn() {
@@ -26,6 +27,6 @@ public class Tie extends GameState {
     }
 
     public String show() {
-        return "It's a tie!";
+        return message;
     }
 }
