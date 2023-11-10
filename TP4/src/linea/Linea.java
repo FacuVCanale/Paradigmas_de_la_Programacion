@@ -8,7 +8,7 @@ public class Linea {
     private static final char UNMARKED_SLOT = ' ';
 
 
-public static final String columnOutOfBoundsError = "Column out of bounds!";
+    public static final String columnOutOfBoundsError = "Column out of bounds!";
 
     public static final String columnIsFullError = "Column is full!";
 
@@ -89,7 +89,7 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
 
     }
 
-    public boolean areAllColumnsFilled() {
+    private boolean areAllColumnsFilled() {
         return IntStream.range(0, BOARD_WIDTH)
                 .noneMatch(col -> getSymbolAtPosition(0, col) == UNMARKED_SLOT);
     }
@@ -99,7 +99,7 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
         return gameState instanceof Tie || gameState instanceof Win;
     }
 
-    public char getSymbolAtPosition(int row, int col) {
+    private char getSymbolAtPosition(int row, int col) {
 
         int rowIndex = BOARD_HEIGHT - 1 - row;
 
