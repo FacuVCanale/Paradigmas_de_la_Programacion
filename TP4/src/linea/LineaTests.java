@@ -17,7 +17,7 @@ public class LineaTests {
                         |    |
                         |    |
                         ------
-                        Red's turn                      
+                        Red's turn
                         """,
                 basicGameModeA().show());
     }
@@ -44,7 +44,7 @@ public class LineaTests {
                 new Linea(4,2, 'A').show());
     }
 
-    @Test void testLineaCanPlayRedAt() {
+    @Test void testLineaCanPlayRed() {
         assertEquals("""
                         |    |
                         |    |
@@ -69,7 +69,7 @@ public class LineaTests {
     }
 
     @Test void testLineaGameDoesNotFinishAfterANonWinningPlay() {
-        assertFalse(basicGameModeA().playRedAt(2).isGameFinished());
+        assertFalse(basicGameModeA().playRedAt(1).isGameFinished());
     }
 
     @Test void testLineaGameRedCanNotPlayTwiceInARow() {
@@ -118,10 +118,6 @@ public class LineaTests {
                     .playBlueAt(1)
                     .playRedAt(1).show());
     }
-
-
-
-
 
     @Test void testPlayerCanNotPlaceOutsideColumns() {
         assertThrowsLike("Column out of bounds!",
