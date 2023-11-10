@@ -14,7 +14,7 @@ public class PlayingRed extends GameState {
     }
 
     public GameState win() {
-        return new Finish("Red has won!");
+        return new Win("Red has won!");
     }
 
     public GameState tie() {

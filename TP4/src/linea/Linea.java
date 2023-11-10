@@ -96,7 +96,7 @@ public static final String columnOutOfBoundsError = "Column out of bounds!";
 
 
     public boolean isGameFinished() {
-        return gameState instanceof Tie || gameState instanceof Finish;
+        return gameState instanceof Tie || gameState instanceof Win;
     }
 
     public char getSymbolAtPosition(int row, int col) {

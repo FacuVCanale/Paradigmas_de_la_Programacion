@@ -144,8 +144,18 @@ public class LineaTests {
                         .isGameFinished());
     }
 
+    @Test void testLineaCanNotPlayAfterWin() {
+        assertThrowsLike(Win.gameIsOverMessage,
+                () -> new Linea(1, 4, 'A')
+                        .playRedAt(1)
+                        .playBlueAt(2)
+                        .playRedAt(3)
+                        .playBlueAt(4)
+                        .playRedAt(1));
+    }
+
     @Test void testLineaCanNotPlayAfterTie() {
-        assertThrowsLike("Game is over! It's a tie!",
+        assertThrowsLike(Tie.gameIsOverMessage,
                             () -> new Linea(1, 4, 'A')
                                     .playRedAt(1)
                                     .playBlueAt(2)
