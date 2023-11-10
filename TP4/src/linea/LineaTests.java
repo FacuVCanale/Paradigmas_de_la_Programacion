@@ -294,6 +294,40 @@ public class LineaTests {
 
 
 
+    @Test
+    public void testGameEndsWhenFillingGapInThreeCheckerDiagonalLine() {
+
+        Linea game =  new Linea(4, 4, 'B');
+
+        game.playRedAt(1)
+                .playBlueAt(1)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(2)
+                .playBlueAt(3)
+                .playRedAt(4)
+                .playBlueAt(4)
+                .playRedAt(4)
+                .playBlueAt(1)
+                .playRedAt(4)
+                .playBlueAt(2)
+                .playRedAt(3);
+
+
+        assertEquals("""
+                        |   X|
+                        |00XX|
+                        |0X00|
+                        |XX0X|
+                        ------
+                        Red has won!
+                        """,
+                game.show());
+        assertTrue(game.isGameFinished());
+
+    }
+
+
     @Test void testLineaGameCanFinishInModeBAfterADiagonalWin() {
         Linea game = gameWithDiagonalRedWin('B');
         assertEquals("""
