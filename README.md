@@ -3,4 +3,4 @@
 - Repositorio de trabajos practicos de la materia "Paradigmas de la programación"
 - Año 2023
 - Universidad de San Andrés
-- Profesor: Emilio Oca y Julio Gervasoni
+- Profesores: Emilio Oca y Julio Gervasoni
